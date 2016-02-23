@@ -13,32 +13,33 @@ public class Main {
         print_chess_board();
     }
 
+    // adds initial pieces to the board with first number corresponding to the player number and the last to the piece#
     private static void add_initial_pieces() {
+        // adds the pawns
         for(int i = 0; i < BOARD_WIDTH; i ++) {
             chess_board[1][i] = "1P" + (i + 1);
             chess_board[BOARD_HEIGHT - 2][i] = "2P" + (i + 1);
         }
 
+        // rooks
         chess_board[0][0] = "1R1";
         chess_board[0][7] = "1R2";
         chess_board[7][0] = "2R1";
         chess_board[7][7] = "2R2";
 
+        // knights
         chess_board[0][1] = "1Kn1";
         chess_board[0][6] = "1Kn2";
         chess_board[7][1] = "2Kn1";
         chess_board[7][6] = "2Kn2";
 
+        // bishops
         chess_board[0][2] = "1B1";
         chess_board[0][5] = "1B2";
         chess_board[7][2] = "2B1";
         chess_board[7][5] = "2B2";
 
-        chess_board[0][2] = "1B1";
-        chess_board[0][5] = "1B2";
-        chess_board[7][2] = "2B1";
-        chess_board[7][5] = "2B2";
-
+        // queens and kings
         chess_board[0][3] = "1Q";
         chess_board[0][4] = "1K";
         chess_board[7][3] = "2Q";
