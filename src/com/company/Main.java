@@ -18,6 +18,16 @@ public class Main {
             chess_board[1][i] = "1P" + i + " ";
             chess_board[BOARD_HEIGHT - 2][i] = "2P" + i + " ";
         }
+
+        chess_board[0][0] = "1R1 ";
+        chess_board[0][7] = "1R2 ";
+        chess_board[7][0] = "2R1 ";
+        chess_board[7][7] = "2R2 ";
+
+        chess_board[0][1] = "1K1 ";
+        chess_board[0][6] = "1K2 ";
+        chess_board[7][1] = "2K1 ";
+        chess_board[7][6] = "2K2 ";
     }
 
     // prints out array which contains the chess board
