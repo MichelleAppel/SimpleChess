@@ -13,6 +13,8 @@ public class Main {
         print_chess_board();
     }
 
+
+
     // adds initial pieces to the board with first number corresponding to the player number and the last to the piece#
     private static void add_initial_pieces() {
         // adds the pawns
@@ -46,6 +48,8 @@ public class Main {
         chess_board[7][4] = "2K";
     }
 
+
+
     // prints out array which contains the chess board
     private static void print_chess_board() {
         for(int i = 0; i < BOARD_HEIGHT; i ++) {
@@ -66,6 +70,8 @@ public class Main {
             }
         }
     }
+
+
 
 
 }
