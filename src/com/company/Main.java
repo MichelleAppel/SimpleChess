@@ -11,15 +11,11 @@ public class Main {
 
 
     public static void main(String[] args) {
-        //add_initial_pieces();
-        //print_chess_board();
-
         board.addPieces();
         board.printBoard();
-
     }
 
-    
+
     // wipe the screen
     private static void wipeScreen() {
         for(int i = 0; i < 10; i++) {
