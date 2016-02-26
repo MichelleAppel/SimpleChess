@@ -2,7 +2,7 @@ package com.company;
 
 public class Board {
     private int size;
-    private int[][] board;
+    private Piece[][] board;
     private Piece[] pieces;
 
     private int piece_number = 1;
@@ -11,7 +11,7 @@ public class Board {
     // constructor
     public Board(int size, int amount_of_pieces) {
         this.size = size;
-        this.board = new int[size][size];
+        this.board = new Piece[size][size];
         this.amount_of_pieces = amount_of_pieces;
         this.pieces = new Piece[amount_of_pieces + 1];
     }
@@ -20,7 +20,7 @@ public class Board {
         this.size = previous.size;
         this.amount_of_pieces = previous.amount_of_pieces;
 
-        this.board = new int[size][size];
+        this.board = new Piece[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 board[j][i] = previous.board[j][i];
@@ -43,11 +43,9 @@ public class Board {
     public void addPawns() {
         for(int i = 0; i < 8; i++) {
             int value = 1;
-            board[i][6] = value; // white pawn
-            pieces[piece_number] = new Piece(true, value, i, 6);
+            board[i][6] = new Piece(true, value, i, 6); // white pawn
 
-            board[i][1] = value; // black pawn
-            pieces[piece_number] = new Piece(false, value, i, 1);
+            board[i][1] = new Piece(false, value, i, 1); // black pawn
 
             piece_number++;
         }
@@ -55,28 +53,23 @@ public class Board {
 
     public void addRooks() {
         int value = 5;
-        board[0][7] = value; // white rook 1
-        pieces[piece_number] = new Piece(true, value, 0, 7);
+        board[0][7] = new Piece(true, value, 0, 7); // white rook 1
 
-        board[7][7] = value; // white rook 2
-        pieces[piece_number] = new Piece(true, value, 7, 7);
+        board[7][7] = new Piece(true, value, 7, 7); // white rook 2
 
-        board[0][0] = value; // black rook 1
-        pieces[piece_number] = new Piece(false, value, 0, 0);
+        board[0][0] = new Piece(false, value, 0, 0); // black rook 1
 
-        board[7][0] = value; // black rook 2
-        pieces[piece_number] = new Piece(false, value, 7, 0);
+        board[7][0] = new Piece(false, value, 7, 0); // black rook 2
+
 
         piece_number++;
     }
 
     public void addKings() {
         int value = 9;
-        board[4][7] = value; // white king
-        pieces[piece_number] = new Piece(true, value, 4, 7);
+        board[4][7] = new Piece(true, value, 4, 7); // white king
 
-        board[4][0] = value; // black king
-        pieces[piece_number] = new Piece(false, value, 4, 0);
+        board[4][0] = new Piece(false, value, 4, 0); // black king
 
         piece_number++;
     }
@@ -84,10 +77,11 @@ public class Board {
     public void printBoard() {
         for (int i = 0; i < size; i++){
             for (int j = 0; j < size; j++){
-                System.out.print(board[j][i] + " ");
+                System.out.print((board[j][i] == null? ".": board[j][i]) + " ");
             }
             System.out.println();
         }
+        
     }
 
 }

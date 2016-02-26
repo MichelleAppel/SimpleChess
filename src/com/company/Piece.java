@@ -47,4 +47,7 @@ public class Piece {
         return y;
     }
 
+    public String toString() {
+        return "" + this.value;
+    }
 }
