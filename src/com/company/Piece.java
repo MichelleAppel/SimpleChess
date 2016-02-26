@@ -10,9 +10,9 @@ public class Piece {
     private int y;
 
     // constructor
-    public Piece(boolean direction, int length, int x, int y) {
-        this.color = direction;
-        this.value = length;
+    public Piece(boolean color, int value, int x, int y) {
+        this.color = color;
+        this.value = value;
         this.x = x;
         this.y = y;
     }
