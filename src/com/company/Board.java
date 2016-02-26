@@ -34,6 +34,7 @@ public class Board {
         }
     }
 
+    
     public void checkMovesForPawn() {
         // insert code here
     }
