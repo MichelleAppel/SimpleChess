@@ -1,6 +1,12 @@
 package com.company;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Board {
+
+    private final List<Point2D> possibleMoves = new ArrayList<Point2D>();
+
     private int size;
     private Piece[][] board;
     private Piece[] pieces;
@@ -34,17 +40,77 @@ public class Board {
         }
     }
 
-    
-    public void checkMovesForPawn() {
-        // insert code here
+    // returns Piece value
+    public Piece checkPiece(int x, int y) {
+        return board[x][y];
     }
 
-    public void checkMovesForRook() {
-        // insert code here
+    // returns the moves in as Point2D.Double (GWN EEN TEST, NOG NIET PERFECT)
+    public void returnMoves() {
+        for (int i = 0; i < possibleMoves.size(); i++) {
+            System.out.println(possibleMoves.get(i));
+        }
     }
 
-    public void checkMovesForKing() {
-        // insert code here
+    // checks all possible moves for a rook (input parameters are it's x and y coordinate)
+    public void checkMovesForRook(int x, int y) {
+        int initX = x;
+        int initY = y;
+
+        // move(s) left
+        while(x > 0) {
+            if(board[x][y] == null) {
+                System.out.println(x + "/" + y + "is a valid move.");
+                Point2D p = new Point2D.Double(x,y);
+                possibleMoves.add(p);
+            } else {
+                System.out.println(x + "/" + y + "is not valid move.");
+            }
+            x -= 1;
+        }
+
+        // move(s) right
+        x = initX;
+        y = initY;
+        while(x < 8) {
+            if(board[x][y] == null) {
+                System.out.println(x + "/" + y + "is a valid move.");
+                Point2D p = new Point2D.Double(x,y);
+                possibleMoves.add(p);
+            } else {
+                System.out.println(x + "/" + y + "is not valid move.");
+            }
+            x += 1;
+        }
+
+        // move(s) down
+        x = initX;
+        y = initY;
+        while(y > 0) {
+            if(board[x][y] == null) {
+                System.out.println(x + "/" + y + "is a valid move.");
+                Point2D p = new Point2D.Double(x,y);
+                possibleMoves.add(p);
+            } else {
+                System.out.println(x + "/" + y + "is not valid move.");
+            }
+            y -= 1;
+        }
+
+        // move(s) up
+        x = initX;
+        y = initY;
+        while(y < 8) {
+            if(board[x][y] == null) {
+                System.out.println(x + "/" + y + "is a valid move.");
+                Point2D p = new Point2D.Double(x,y);
+                possibleMoves.add(p);
+            } else {
+                System.out.println(x + "/" + y + "is not valid move.");
+            }
+            y += 1;
+        }
+
     }
 
     // adds all pieces (objects) to board the board (matrix)

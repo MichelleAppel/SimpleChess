@@ -2,10 +2,10 @@ package com.company;
 
 public class Main {
 
-    // chess board is always 8x8 fields
+    // chess board (always 8x8 fields)
     private static int BOARD_SIZE = 8;
 
-    // simple chess has 32 pieces (8x2 pawns, 2x2 rooks, 1x2 kings)
+    // simple chess has 22 pieces: 8x2 pawns, 2x2 rooks, 1x2 kings
     private static final int AMOUNT_OF_PIECES = 22;
 
     // declare new object from class Board
@@ -16,6 +16,12 @@ public class Main {
         //wipeScreen();
         board.printBoard();
         //delay(2000);
+
+        //Piece test = board.checkPiece(0, 0);
+        //System.out.println(test);
+
+        board.checkMovesForRook(0,0);
+        board.returnMoves();
     }
 
     // wipe the screen
