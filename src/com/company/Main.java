@@ -13,9 +13,16 @@ public class Main {
 
     public static void main(String[] args) {
         board.addPieces();
-        //wipeScreen();
-        board.printBoard();
+
         //delay(2000);
+        wipeScreen();
+        board.printBoard();
+
+        //board.moveRight(0, 0);
+
+        //delay(2000);
+        //wipeScreen();
+        //board.printBoard();
 
         //Piece test = board.checkPiece(0, 0);
         //System.out.println(test);
