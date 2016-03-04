@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Board {
 
+    
     // om te testen (hoe we moves het best op kunnen slaan)
     private final List<Point2D> possibleMoves = new ArrayList<Point2D>();
 
