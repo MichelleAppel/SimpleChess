@@ -105,6 +105,10 @@ public class Board {
                 fieldIsEmpty = false;
             }
             x -= 1;
+
+            Piece p1 = new Pawn(false,1,1);
+
+            Move[] m = p1.getMoves();
         }
 
         // move(s) right

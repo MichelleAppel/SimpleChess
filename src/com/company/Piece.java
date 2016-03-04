@@ -1,13 +1,13 @@
 package com.company;
 
-public class Piece {
+public abstract class Piece {
 
     // true = white
     // false = black
-    private boolean color;
-    private int value;
-    private int x;
-    private int y;
+    protected boolean color;
+    protected int value;
+    protected int x;
+    protected int y;
 
     // constructor
     public Piece(boolean color, int value, int x, int y) {
@@ -16,6 +16,8 @@ public class Piece {
         this.x = x;
         this.y = y;
     }
+
+    public abstract Move[] getMoves();
 
     // returns color (true = white and false = black)
     public boolean getColor() {
