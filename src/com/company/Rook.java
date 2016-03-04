@@ -8,7 +8,7 @@ public class Rook extends Piece {
     }
 
     @Override
-    public ArrayList<BoardSituation> getMoves() {
+    public ArrayList<Board> getMoves() {
         ArrayList<Move> temp = new ArrayList<Move>();
 
         boolean color = this.color;

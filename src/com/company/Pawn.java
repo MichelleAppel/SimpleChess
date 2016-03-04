@@ -8,15 +8,33 @@ public class Pawn extends Piece {
     }
 
     @Override
-    public ArrayList<BoardSituation> getMoves() {
-        ArrayList<Move> temp = new ArrayList<Move>();
-
+    public ArrayList<BoardSituations> getMoves(Board board) {
+        ArrayList<BoardSituations> possible_moves = new ArrayList<BoardSituations>();
+this.board = board
         boolean color = this.color;
         int x = this.x;
         int y = this.y;
 
 
+        if(color) {
+            // color = true (white)
+            if(y == 6) {
+                if(board[x][y-1] == null) {
+                    Board new_board = new Board(board);
+                    new_board.moveRight(x, y);
+                    possible_moves.add(new_board);
+                }
+                if(board[x][y-2] == null) {
 
-        return temp;
+                }
+            }
+
+        } else {
+            // color = false (black)
+
+
+        }
+
+        return possible_moves;
     }
 }

@@ -1,5 +1,7 @@
 package com.company;
 
+import java.util.ArrayList;
+
 public class Main {
 
     // chess board (always 8x8 fields)
@@ -18,6 +20,8 @@ public class Main {
         wipeScreen();
         board.printBoard();
 
+        board.generateAllChildren();
+
         //board.moveRight(0, 0);
 
         //delay(2000);
@@ -27,8 +31,8 @@ public class Main {
         //Piece test = board.checkPiece(0, 0);
         //System.out.println(test);
 
-        board.checkMovesForRook(0,0);
-        board.returnMoves();
+        //board.checkMovesForRook(0,0);
+        //board.returnMoves();
     }
 
     // wipe the screen
