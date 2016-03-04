@@ -1,13 +1,8 @@
 package com.company;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Board {
-
-    
-    // om te testen (hoe we moves het best op kunnen slaan)
-    private final List<Point2D> possibleMoves = new ArrayList<Point2D>();
 
     private int size;
     private Piece[][] board;
@@ -53,42 +48,6 @@ public class Board {
         return board[x][y];
     }
 
-    // returns the moves in as Point2D.Double (GWN EEN TEST, NOG NIET PERFECT)
-    public void returnMoves() {
-        for (int i = 0; i < possibleMoves.size(); i++) {
-            System.out.println(possibleMoves.get(i));
-        }
-    }
-
-    // WERKT NOG NIET
-    public void checkMovesForPawn(int x, int y) {
-        int initX = x;
-        int initY = y;
-        boolean fieldIsEmpty = true;
-
-        // pawns still on the pawn start line
-        if(y == 1) {
-            // move 1: 1 y further
-            if(board[x][y+1] == null) {
-                // do something
-            }
-
-            // move 2: 2 y further
-            if(board[x][y+2] == null) {
-                // do something
-            }
-
-            // move 3: strike another pawn (that's diagonal from current pawn & opposite color)
-
-        }
-
-        // pawns still on the pawn start line
-        if(y == 6) {
-            // do something
-        }
-    }
-
-
     // checks all possible moves for a rook (input parameters are it's x and y coordinate)
     public void checkMovesForRook(int x, int y) {
         int initX = x;
@@ -99,8 +58,6 @@ public class Board {
         while(x > 0 && fieldIsEmpty) {
             if(board[x-1][y] == null) {
                 System.out.println(x + "/" + y + "is a valid move.");
-                Point2D p = new Point2D.Double(x,y);
-                possibleMoves.add(p);
             } else {
                 System.out.println(x + "/" + y + "is not valid move.");
                 fieldIsEmpty = false;
@@ -119,8 +76,6 @@ public class Board {
         while(x < 8 && fieldIsEmpty) {
             if(board[x+1][y] == null) {
                 System.out.println(x + "/" + y + "is a valid move.");
-                Point2D p = new Point2D.Double(x,y);
-                possibleMoves.add(p);
             } else {
                 System.out.println(x + "/" + y + "is not valid move.");
                 fieldIsEmpty = false;
@@ -135,8 +90,6 @@ public class Board {
         while(y < 8 && fieldIsEmpty) {
             if(board[x][y+1] == null) {
                 System.out.println(x + "/" + y + "is a valid move.");
-                Point2D p = new Point2D.Double(x,y);
-                possibleMoves.add(p);
             } else {
                 System.out.println(x + "/" + y + "is not valid move.");
                 fieldIsEmpty = false;
@@ -151,8 +104,6 @@ public class Board {
         while(y > 0 && fieldIsEmpty) {
             if(board[x][y-1] == null) {
                 System.out.println(x + "/" + y + "is a valid move.");
-                Point2D p = new Point2D.Double(x,y);
-                possibleMoves.add(p);
             } else {
                 System.out.println(x + "/" + y + "is not valid move.");
                 fieldIsEmpty = false;
