@@ -1,5 +1,7 @@
 package com.company;
 
+import java.util.ArrayList;
+
 public class Main {
 
     // chess board is always 8x8 fields
@@ -16,7 +18,37 @@ public class Main {
         //wipeScreen();
         board.printBoard();
         //delay(2000);
+
+
+
+/*
+        ArrayList<Board> list = board.checkMovesForPawn(true, 6, 0, board);
+
+        for(int i = 0; i < list.size(); i++) {
+            list.get(i).printBoard();
+        }
+
+        ArrayList<Board> list2 = board.checkMovesForRook(false, 0,0, board);
+
+        for(int i = 0; i < list2.size(); i++) {
+            list2.get(i).printBoard();
+        }
+
+        ArrayList<Board> list3 = board.checkMovesForKing(true, 7,4, board);
+
+        for(int i = 0; i < list3.size(); i++) {
+            list3.get(i).printBoard();
+        }
+        */
+
+        ArrayList<Board> list4 = board.checkMovesForAll(false, board);
+
+        for(int i = 0; i < list4.size(); i++) {
+            list4.get(i).printBoard();
+        }
     }
+
+
 
     // wipe the screen
     private static void wipeScreen() {
@@ -24,6 +56,7 @@ public class Main {
             System.out.println();
         }
     }
+
 
     // delay (useful to see if move methods actually work)
     private static void delay(int milliseconds) {
