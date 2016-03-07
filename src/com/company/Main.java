@@ -43,16 +43,16 @@ public class Main {
 
         ArrayList<Board> list4 = board.checkMovesForAll(false, board);
 
-        for(int i = 0; i < list4.size(); i++) {
-            list4.get(i).printBoard();
+        for (Board aList4 : list4) {
+            aList4.printBoard();
         }
 
 
         Board board2 = new Board(list4.get(4)) ;
         ArrayList<Board> list5 = board2.checkMovesForAll(true, board2);
 
-        for(int i = 0; i < list5.size(); i++) {
-            list5.get(i).printBoard();
+        for (Board aList5 : list5) {
+            aList5.printBoard();
         }
 
 
