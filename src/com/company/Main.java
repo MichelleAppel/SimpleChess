@@ -44,9 +44,7 @@ public class Main {
         for (Board aList4 : list4) {
             aList4.printBoard();
         }
-
-
-
+        
 
         Board board2 = new Board(list4.get(4)) ;
         ArrayList<Board> list5 = board2.checkMovesForAll(true, board2);
@@ -56,15 +54,12 @@ public class Main {
         }
     }
 
-
-
     // wipe the screen
     private static void wipeScreen() {
         for(int i = 0; i < 10; i++) {
             System.out.println();
         }
     }
-
 
     // delay (useful to see if move methods actually work)
     private static void delay(int milliseconds) {

@@ -122,76 +122,45 @@ public class Board {
         int x1 = x+1;
         int y1 = y+1;
 
-        // naar rechts
+        // move naar rechts
         while(x1 < 8 && board[y][x1] == null) {
-            Board board1 = new Board(input_board);
-            Piece piece = new Piece(color, value, y, x1);
-            board1.addPiece(piece, y, x1);
-            board1.removePiece(y,x);
-            list.add(board1);
+            list.add(pieceMoves(color, x, y, x1, y, value, input_board));
             x1++;
         }
         if(x1 < 8 && board[y][x1].getColor() != color) {
-            Board board1 = new Board(input_board);
-            Piece piece = new Piece(color, value, y, x1);
-            board1.removePiece(y,x1);
-            board1.addPiece(piece, y, x1);
-            board1.removePiece(y,x);
-            list.add(board1);
+            list.add(pieceMoves(color, x, y, x1, y, value, input_board));
         }
-        // naar beneden
+
+        // move naar beneden
         while(y1 < 8 && board[y1][x] == null) {
-            Board board1 = new Board(input_board);
-            Piece piece = new Piece(color, value, y1, x);
-            board1.addPiece(piece, y1, x);
-            board1.removePiece(y,x);
-            list.add(board1);
+            list.add(pieceMoves(color, x, y, x, y1, value, input_board));
             y1++;
         }
         if(y1 < 8 && board[y1][x].getColor() != color) {
-            Board board1 = new Board(input_board);
-            Piece piece = new Piece(color, value, y1, x);
-            board1.removePiece(y1,x);
-            board1.addPiece(piece, y1, x);
-            board1.removePiece(y,x);
-            list.add(board1);
+            list.add(pieceMoves(color, x, y, x, y1, value, input_board));
         }
+
         x1 = x-1;
         y1 = y-1;
-        // naar links
+
+        // move naar links
         while(x1 > 0 && board[y][x1] == null) {
-            Board board1 = new Board(input_board);
-            Piece piece = new Piece(color, value, y, x1);
-            board1.addPiece(piece, y, x1);
-            board1.removePiece(y,x);
-            list.add(board1);
+            list.add(pieceMoves(color, x, y, x1, y, value, input_board));
             x--;
         }
         if(x1 > 0 && board[y][x1].getColor() != color) {
-            Board board1 = new Board(input_board);
-            Piece piece = new Piece(color, value, y, x1);
-            board1.removePiece(y,x1);
-            board1.addPiece(piece, y, x1);
-            board1.removePiece(y,x);
-            list.add(board1);
+            list.add(pieceMoves(color, x, y, x1, y, value, input_board));
         }
-        // naar boven
+
+        // move naar boven
         while(y1 > 0 && board[y1][x] == null) {
-            Board board1 = new Board(input_board);
-            Piece piece = new Piece(color, value, y1, x);
-            board1.addPiece(piece, y1, x);
-            board1.removePiece(y,x);
-            list.add(board1);
+            list.add(pieceMoves(color, x, y, x, y1, value, input_board));
             y1--;
         }
         if(y1 > 0 && board[y1][x].getColor() != color) {
-            Board board1 = new Board(input_board);
-            Piece piece = new Piece(color, value, y1, x);
-            board1.removePiece(y1,x);
-            board1.addPiece(piece, y1, x);
-            board1.removePiece(y,x);
-            list.add(board1);
+            list.add(pieceMoves(color, x, y, x, y1, value, input_board));
         }
+
         return list;
     }
 
@@ -296,7 +265,6 @@ public class Board {
         return list;
     }
 
-
     public ArrayList checkMovesForAll(boolean color, Board input_board) {
         ArrayList list =  new ArrayList<>();
         for(int y = 0; y < 8; y++) {
@@ -310,14 +278,14 @@ public class Board {
                     boolean getColor = piece.getColor();
 
                     if (color == getColor) {
-                        // pawns
                         if (getValue == 1) {
+                            // pawns
                             minilist = checkMovesForPawn(color, x, y, input_board);
-                            // rooks
                         } else if (getValue == 5) {
+                            // rooks
                             minilist = checkMovesForRook(color, x, y, input_board);
-                            // king
                         } else if (getValue == 9) {
+                            // king
                             minilist = checkMovesForKing(color, x, y, input_board);
                         }
                     }
@@ -329,11 +297,6 @@ public class Board {
         }
         return list;
     }
-
-
-
-
-
 
     // adds all pieces (objects) to board the board (matrix)
     public void addPieces() {
