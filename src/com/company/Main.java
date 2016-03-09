@@ -21,25 +21,6 @@ public class Main {
 
 
 
-/*
-        ArrayList<Board> list = board.checkMovesForPawn(true, 6, 0, board);
-
-        for(int i = 0; i < list.size(); i++) {
-            list.get(i).printBoard();
-        }
-
-        ArrayList<Board> list2 = board.checkMovesForRook(false, 0,0, board);
-
-        for(int i = 0; i < list2.size(); i++) {
-            list2.get(i).printBoard();
-        }
-
-        ArrayList<Board> list3 = board.checkMovesForKing(true, 7,4, board);
-
-        for(int i = 0; i < list3.size(); i++) {
-            list3.get(i).printBoard();
-        }
-        */
 
         ArrayList<Board> list4 = board.checkMovesForAll(false, board);
 
@@ -47,13 +28,6 @@ public class Main {
             aList4.printBoard();
         }
 
-
-        Board board2 = new Board(list4.get(4)) ;
-        ArrayList<Board> list5 = board2.checkMovesForAll(true, board2);
-
-        for (Board aList5 : list5) {
-            aList5.printBoard();
-        }
 
 
 
