@@ -49,67 +49,53 @@ public class Board {
         ArrayList<Board> list = new ArrayList<>();
         int value = 1;
 
+        int x1;
+        int y1;
+
         if(color) {
-            if(board[y][x-1] == null) {
-                Board board1 = new Board(input_board);
-                Piece piece = new Piece(color, value, y, x-1);
-                board1.addPiece(piece, y, x-1);
-                board1.removePiece(y,x);
-                list.add(board1);
+
+            x1 = x-1;
+            y1 = y;
+            if (x1 > 0 && board[y1][x1] == null) {
+                    list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
-            if(x == 6 && board[y][x-2] == null && board[y][x-1] == null) {
-                Board board2 = new Board(input_board);
-                Piece piece = board[y][x];
-                board2.addPiece(piece, y, x-2);
-                board2.removePiece(y,x);
-                list.add(board2);
+
+            x1 = x-2;
+            if(x == 6 && board[y1][x1] == null && board[y][x1] == null) {
+                list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
-            if(x-1 > 0 && y-1 > 0 && board[y-1][x-1] != null && !board[y-1][x-1].getColor()) {
-                Board board3 = new Board(input_board);
-                Piece piece = board[y][x];
-                board3.removePiece(y-1,x-1);
-                board3.addPiece(piece, y-1, x-1);
-                board3.removePiece(y,x);
-                list.add(board3);
+
+            x1 = x-1;
+            y1 = y-1;
+            if(x1 > 0 && y1 > 0 && board[y1][x1] != null && !board[y1][x1].getColor()) {
+                list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
-            if(x-1 > 0 && y+1 < 8 && board[y+1][x-1] != null && !board[y+1][x-1].getColor()) {
-                Board board4 = new Board(input_board);
-                Piece piece = board[y][x];
-                board4.removePiece(y+1,x-1);
-                board4.addPiece(piece, y+1, x-1);
-                board4.removePiece(y,x);
-                list.add(board4);
+
+            y = y+1;
+            if(x1 > 0 && y1 > 0 && board[y1][x1] != null && !board[y1][x1].getColor()) {
+                list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
         } else {
-            if (board[y][x+1] == null) {
-                Board board1 = new Board(input_board);
-                Piece piece = new Piece(color, value, y, x+1);
-                board1.addPiece(piece, y, x+1);
-                board1.removePiece(y, x);
-                list.add(board1);
+            x1 = x+1;
+            y1 = y;
+            if (x1 > 0 && board[y1][x1] == null) {
+                list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
-            if (x == 1 && board[y][x+2] == null && board[y][x+1] == null) {
-                Board board2 = new Board(input_board);
-                Piece piece = board[y][x];
-                board2.addPiece(piece, y, x + 2);
-                board2.removePiece(y, x);
-                list.add(board2);
+
+            x1 = x+2;
+            if(x == 1 && board[y1][x1] == null && board[y][x1] == null) {
+                list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
-            if(x+1 < 8 && y-1 > 0 && board[y-1][x+1] != null && board[y-1][x+1].getColor()) {
-                Board board3 = new Board(input_board);
-                Piece piece = board[y][x];
-                board3.removePiece(y-1,x+1);
-                board3.addPiece(piece, y-1, x+1);
-                board3.removePiece(y,x);
-                list.add(board3);
+
+            x1 = x+1;
+            y1 = y-1;
+            if(x1 > 0 && y1 > 0 && board[y1][x1] != null && !board[y1][x1].getColor()) {
+                list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
-            if(x+1 < 8 && y+1 < 8 && board[y+1][x+1] != null && board[y+1][x+1].getColor()) {
-                Board board4 = new Board(input_board);
-                Piece piece = board[y][x];
-                board4.removePiece(y+1,x+1);
-                board4.addPiece(piece, y+1, x+1);
-                board4.removePiece(y,x);
-                list.add(board4);
+
+            y = y+1;
+            if(x1 > 0 && y1 > 0 && board[y1][x1] != null && !board[y1][x1].getColor()) {
+                list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
         }
         return list;

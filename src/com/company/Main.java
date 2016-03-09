@@ -44,7 +44,7 @@ public class Main {
         for (Board aList4 : list4) {
             aList4.printBoard();
         }
-        
+
 
         Board board2 = new Board(list4.get(4)) ;
         ArrayList<Board> list5 = board2.checkMovesForAll(true, board2);
