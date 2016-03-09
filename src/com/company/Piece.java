@@ -1,6 +1,6 @@
 package com.company;
 
-public abstract class Piece {
+public class Piece {
 
     // true = white
     // false = black
@@ -17,7 +17,7 @@ public abstract class Piece {
         this.y = y;
     }
 
-    public abstract Move[] getMoves();
+    //public abstract Move[] getMoves();
 
     // returns color (true = white and false = black)
     public boolean getColor() {
