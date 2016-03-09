@@ -69,6 +69,22 @@ public class Board {
                 board2.removePiece(y,x);
                 list.add(board2);
             }
+            if(x-1 > 0 && y-1 > 0 && board[y-1][x-1] != null && !board[y-1][x-1].getColor()) {
+                Board board3 = new Board(input_board);
+                Piece piece = board[y][x];
+                board3.removePiece(y-1,x-1);
+                board3.addPiece(piece, y-1, x-1);
+                board3.removePiece(y,x);
+                list.add(board3);
+            }
+            if(x-1 > 0 && y+1 < 8 && board[y+1][x-1] != null && !board[y+1][x-1].getColor()) {
+                Board board4 = new Board(input_board);
+                Piece piece = board[y][x];
+                board4.removePiece(y+1,x-1);
+                board4.addPiece(piece, y+1, x-1);
+                board4.removePiece(y,x);
+                list.add(board4);
+            }
         } else {
             if (board[y][x+1] == null) {
                 Board board1 = new Board(input_board);
@@ -84,6 +100,22 @@ public class Board {
                 board2.removePiece(y, x);
                 list.add(board2);
             }
+            if(x+1 < 8 && y-1 > 0 && board[y-1][x+1] != null && board[y-1][x+1].getColor()) {
+                Board board3 = new Board(input_board);
+                Piece piece = board[y][x];
+                board3.removePiece(y-1,x+1);
+                board3.addPiece(piece, y-1, x+1);
+                board3.removePiece(y,x);
+                list.add(board3);
+            }
+            if(x+1 < 8 && y+1 < 8 && board[y+1][x+1] != null && board[y+1][x+1].getColor()) {
+                Board board4 = new Board(input_board);
+                Piece piece = board[y][x];
+                board4.removePiece(y+1,x+1);
+                board4.addPiece(piece, y+1, x+1);
+                board4.removePiece(y,x);
+                list.add(board4);
+            }
         }
         return list;
     }
@@ -95,6 +127,7 @@ public class Board {
         int x1 = x+1;
         int y1 = y+1;
 
+        // naar rechts
         while(x1 < 8 && board[y][x1] == null) {
             Board board1 = new Board(input_board);
             Piece piece = new Piece(color, value, y, x1);
@@ -103,6 +136,15 @@ public class Board {
             list.add(board1);
             x1++;
         }
+        if(x1 < 8 && board[y][x1].getColor() != color) {
+            Board board1 = new Board(input_board);
+            Piece piece = new Piece(color, value, y, x1);
+            board1.removePiece(y,x1);
+            board1.addPiece(piece, y, x1);
+            board1.removePiece(y,x);
+            list.add(board1);
+        }
+        // naar beneden
         while(y1 < 8 && board[y1][x] == null) {
             Board board1 = new Board(input_board);
             Piece piece = new Piece(color, value, y1, x);
@@ -111,8 +153,17 @@ public class Board {
             list.add(board1);
             y1++;
         }
+        if(y1 < 8 && board[y1][x].getColor() != color) {
+            Board board1 = new Board(input_board);
+            Piece piece = new Piece(color, value, y1, x);
+            board1.removePiece(y1,x);
+            board1.addPiece(piece, y1, x);
+            board1.removePiece(y,x);
+            list.add(board1);
+        }
         x1 = x-1;
         y1 = y-1;
+        // naar links
         while(x1 > 0 && board[y][x1] == null) {
             Board board1 = new Board(input_board);
             Piece piece = new Piece(color, value, y, x1);
@@ -121,6 +172,15 @@ public class Board {
             list.add(board1);
             x--;
         }
+        if(x1 > 0 && board[y][x1].getColor() != color) {
+            Board board1 = new Board(input_board);
+            Piece piece = new Piece(color, value, y, x1);
+            board1.removePiece(y,x1);
+            board1.addPiece(piece, y, x1);
+            board1.removePiece(y,x);
+            list.add(board1);
+        }
+        // naar boven
         while(y1 > 0 && board[y1][x] == null) {
             Board board1 = new Board(input_board);
             Piece piece = new Piece(color, value, y1, x);
@@ -129,69 +189,114 @@ public class Board {
             list.add(board1);
             y1--;
         }
+        if(y1 > 0 && board[y1][x].getColor() != color) {
+            Board board1 = new Board(input_board);
+            Piece piece = new Piece(color, value, y1, x);
+            board1.removePiece(y1,x);
+            board1.addPiece(piece, y1, x);
+            board1.removePiece(y,x);
+            list.add(board1);
+        }
         return list;
     }
 
+    public Board kingMoves(boolean color, int x, int y, int x1, int y1, int value, Board input_board) {
+            Board board1 = new Board(input_board);
+            Piece piece = new Piece(color, value, y1, x1);
+            if(board[y1][x1] != null) {
+                removePiece(y1, x1);
+            }
+            board1.addPiece(piece, y1, x1);
+            board1.removePiece(y,x);
+        return board1;
+    }
 
     public ArrayList checkMovesForKing(boolean color, int x, int y, Board input_board) {
         ArrayList<Board> list = new ArrayList<>();
+        int x1;
+        int y1;
+
         int value = 9;
 
-        if(x+1 < 8 && board[y][x+1] == null) {
-            Board board1 = new Board(input_board);
-            Piece piece = new Piece(color, value, y, x+1);
-            board1.addPiece(piece, y, x+1);
-            board1.removePiece(y,x);
-            list.add(board1);
+        if(x+1 < 8) {
+            x1 = x+1;
+            y1 = y;
+
+            if (board[y][x1] == null) {
+                list.add(kingMoves(color, x, y, x1, y1, value, input_board));
+            } else if (board[y1][x1] != null && board[y1][x1].getColor() != color) {
+                list.add(kingMoves(color, x, y, x1, y1, value, input_board));
+            }
         }
-        if(x-1 > 0 && board[y][x-1] == null) {
-            Board board1 = new Board(input_board);
-            Piece piece = new Piece(color, value, y, x-1);
-            board1.addPiece(piece, y, x-1);
-            board1.removePiece(y,x);
-            list.add(board1);
+        if(x-1 > 0 ) {
+            x1 = x-1;
+            y1 = y;
+
+            if (board[y][x1] == null) {
+                list.add(kingMoves(color, x, y, x1, y1, value, input_board));
+            } else if (board[y1][x1] != null && board[y1][x1].getColor() != color) {
+                list.add(kingMoves(color, x, y, x1, y1, value, input_board));
+            }
         }
-        if(y+1 < 8 && board[y+1][x] == null) {
-            Board board1 = new Board(input_board);
-            Piece piece = new Piece(color, value, y+1, x);
-            board1.addPiece(piece, y+1, x);
-            board1.removePiece(y,x);
-            list.add(board1);
+        if(y+1 < 8) {
+            x1 = x;
+            y1 = y+1;
+
+            if (board[y][x1] == null) {
+                list.add(kingMoves(color, x, y, x1, y1, value, input_board));
+            } else if (board[y1][x1] != null && board[y1][x1].getColor() != color) {
+                list.add(kingMoves(color, x, y, x1, y1, value, input_board));
+            }
         }
-        if(y-1 > 0 && board[y-1][x] == null) {
-            Board board1 = new Board(input_board);
-            Piece piece = new Piece(color, value, y-1, x);
-            board1.addPiece(piece, y-1, x);
-            board1.removePiece(y,x);
-            list.add(board1);
+        if(y-1 > 0) {
+            x1 = x;
+            y1 = y-1;
+
+            if (board[y][x1] == null) {
+                list.add(kingMoves(color, x, y, x1, y1, value, input_board));
+            } else if (board[y1][x1] != null && board[y1][x1].getColor() != color) {
+                list.add(kingMoves(color, x, y, x1, y1, value, input_board));
+            }
         }
-        if(y+1 < 8 && x+1 < 8 && board[y+1][x+1] == null) {
-            Board board1 = new Board(input_board);
-            Piece piece = new Piece(color, value, y+1, x+1);
-            board1.addPiece(piece, y+1, x+1);
-            board1.removePiece(y,x);
-            list.add(board1);
+        if(y+1 < 8 && x+1 < 8) {
+            x1 = x+1;
+            y1 = y+1;
+
+            if (board[y][x1] == null) {
+                list.add(kingMoves(color, x, y, x1, y1, value, input_board));
+            } else if (board[y1][x1] != null && board[y1][x1].getColor() != color) {
+                list.add(kingMoves(color, x, y, x1, y1, value, input_board));
+            }
         }
-        if(y-1 > 0 && x+1 < 8 && board[y-1][x+1] == null) {
-            Board board1 = new Board(input_board);
-            Piece piece = new Piece(color, value, y-1, x+1);
-            board1.addPiece(piece, y-1, x+1);
-            board1.removePiece(y,x);
-            list.add(board1);
+        if(y-1 > 0 && x+1 < 8) {
+            x1 = x+1;
+            y1 = y-1;
+
+            if (board[y][x1] == null) {
+                list.add(kingMoves(color, x, y, x1, y1, value, input_board));
+            } else if (board[y1][x1] != null && board[y1][x1].getColor() != color) {
+                list.add(kingMoves(color, x, y, x1, y1, value, input_board));
+            }
         }
-        if(y+1 < 8 && x-1 > 0 && board[y+1][x-1] == null) {
-            Board board1 = new Board(input_board);
-            Piece piece = new Piece(color, value, y+1, x-1);
-            board1.addPiece(piece, y+1, x-1);
-            board1.removePiece(y,x);
-            list.add(board1);
+        if(y+1 < 8 && x-1 > 0) {
+            x1 = x-1;
+            y1 = y+1;
+
+            if (board[y][x1] == null) {
+                list.add(kingMoves(color, x, y, x1, y1, value, input_board));
+            } else if (board[y1][x1] != null && board[y1][x1].getColor() != color) {
+                list.add(kingMoves(color, x, y, x1, y1, value, input_board));
+            }
         }
         if(y-1 > 0 && x-1 > 0 && board[y-1][x-1] == null) {
-            Board board1 = new Board(input_board);
-            Piece piece = new Piece(color, value, y-1, x-1);
-            board1.addPiece(piece, y-1, x-1);
-            board1.removePiece(y,x);
-            list.add(board1);
+            x1 = x-1;
+            y1 = y-1;
+
+            if (board[y][x1] == null) {
+                list.add(kingMoves(color, x, y, x1, y1, value, input_board));
+            } else if (board[y1][x1] != null && board[y1][x1].getColor() != color) {
+                list.add(kingMoves(color, x, y, x1, y1, value, input_board));
+            }
         }
         return list;
     }
