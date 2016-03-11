@@ -28,10 +28,20 @@ public class Main {
         queue.add(board);
 
         int[] coordinates = getUserInput();
-        for(int i = 0; i < 4; i++) {
-            System.out.println(coordinates[i]);
-        }
+        int startX = coordinates[0];
+        int startY = coordinates[1];
+        int endX = coordinates[2];
+        int endY = coordinates[3];
 
+        System.out.println(startX);
+        System.out.println(startY);
+        System.out.println(endX);
+        System.out.println(endY);
+
+
+        if(board.isMoveValid(startX, startY, endX, endY, board)) {
+            System.out.println("YEAHHHH");
+        }
         /*
         for(int i = 0; i < 5; i++) {
             System.out.println("i is" + i);
@@ -146,7 +156,7 @@ public class Main {
         // validate start Y (is the int in the correct range?)
         int startYInt = Integer.parseInt(startYString);
         if (startYInt >= 1 && startYInt <= 8) {
-            startY = startYInt-1;
+            startY = 8-(startYInt);
         } else {
             // error
         }
@@ -174,7 +184,7 @@ public class Main {
         // validate end Y (is the int in the correct range?)
         int endYInt = Integer.parseInt(endYString);
         if (endYInt >= 1 && endYInt <= 8) {
-            endY = endYInt-1;
+            endY = 8-(endYInt);
         } else {
             // error
         }
