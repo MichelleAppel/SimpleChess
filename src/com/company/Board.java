@@ -31,9 +31,33 @@ public class Board {
         }
 
         this.pieces = new Piece[amount_of_pieces + 1];
-        for (int i = 1; i <= amount_of_pieces; i++) {
-            pieces[i] = previous.pieces[i];
+        System.arraycopy(previous.pieces, 1, pieces, 1, amount_of_pieces);
+    }
+
+    public boolean isMoveValid(int x1, int y1, int x2, int y2, Board input_board) {
+        ArrayList minilist =  new ArrayList<>();
+
+        Piece piece = board[x1][y1];
+        int value = piece.getValue();
+        boolean color = piece.getColor();
+
+        // if pawn
+        if(value == 1) {
+            minilist = checkMovesForPawn(color, x1, y1, input_board);
+        // if rook
+        } else if(value == 5) {
+            minilist = checkMovesForRook(color, x1, y1, input_board);
+        // if king
+        } else if(value == 9) {
+            minilist = checkMovesForKing(color, x1, y1, input_board);
         }
+
+        Board board1 = pieceMoves(color, x1, y1, x2, y2, value, input_board);
+
+        for (Object aMinilist : minilist) {
+            if (aMinilist == board1) return true;
+        }
+        return false;
     }
 
     public void addPiece(Piece piece, int x, int y) {
