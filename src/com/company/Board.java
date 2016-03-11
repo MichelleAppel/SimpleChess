@@ -44,6 +44,16 @@ public class Board {
         board[x][y] = null;
     }
 
+    public Board pieceMoves(boolean color, int x, int y, int x1, int y1, int value, Board input_board) {
+        Board board1 = new Board(input_board);
+        Piece piece = new Piece(color, value, y1, x1);
+        if(board[y1][x1] != null) {
+            removePiece(y1, x1);
+        }
+        board1.addPiece(piece, y1, x1);
+        board1.removePiece(y,x);
+        return board1;
+    }
 
     public ArrayList checkMovesForPawn(boolean color, int x, int y, Board input_board) {
         ArrayList<Board> list = new ArrayList<>();
@@ -150,16 +160,6 @@ public class Board {
         return list;
     }
 
-    public Board pieceMoves(boolean color, int x, int y, int x1, int y1, int value, Board input_board) {
-            Board board1 = new Board(input_board);
-            Piece piece = new Piece(color, value, y1, x1);
-            if(board[y1][x1] != null) {
-                removePiece(y1, x1);
-            }
-            board1.addPiece(piece, y1, x1);
-            board1.removePiece(y,x);
-            return board1;
-    }
 
     public ArrayList checkMovesForKing(boolean color, int x, int y, Board input_board) {
         ArrayList<Board> list = new ArrayList<>();
