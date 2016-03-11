@@ -130,20 +130,20 @@ public class Board {
         y1 = y-1;
 
         // move naar links
-        while(x1 > 0 && board[y][x1] == null) {
+        while(x1 >= 0 && board[y][x1] == null) {
             list.add(pieceMoves(color, x, y, x1, y, value, input_board));
-            x--;
+            x1--;
         }
-        if(x1 > 0 && board[y][x1].getColor() != color) {
+        if(x1 >= 0 && board[y][x1].getColor() != color) {
             list.add(pieceMoves(color, x, y, x1, y, value, input_board));
         }
 
         // move naar boven
-        while(y1 > 0 && board[y1][x] == null) {
+        while(y1 >= 0 && board[y1][x] == null) {
             list.add(pieceMoves(color, x, y, x, y1, value, input_board));
             y1--;
         }
-        if(y1 > 0 && board[y1][x].getColor() != color) {
+        if(y1 >= 0 && board[y1][x].getColor() != color) {
             list.add(pieceMoves(color, x, y, x, y1, value, input_board));
         }
 
@@ -178,7 +178,7 @@ public class Board {
                 list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
         }
-        if(x-1 > 0 ) {
+        if(x-1 >= 0 ) {
             x1 = x-1;
             y1 = y;
 
@@ -198,7 +198,7 @@ public class Board {
                 list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
         }
-        if(y-1 > 0) {
+        if(y-1 >= 0) {
             x1 = x;
             y1 = y-1;
 
@@ -218,7 +218,7 @@ public class Board {
                 list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
         }
-        if(y-1 > 0 && x+1 < 8) {
+        if(y-1 >= 0 && x+1 < 8) {
             x1 = x+1;
             y1 = y-1;
 
@@ -228,7 +228,7 @@ public class Board {
                 list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
         }
-        if(y+1 < 8 && x-1 > 0) {
+        if(y+1 < 8 && x-1 >= 0) {
             x1 = x-1;
             y1 = y+1;
 
@@ -238,7 +238,7 @@ public class Board {
                 list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
         }
-        if(y-1 > 0 && x-1 > 0 && board[y-1][x-1] == null) {
+        if(y-1 >= 0 && x-1 >= 0 && board[y-1][x-1] == null) {
             x1 = x-1;
             y1 = y-1;
 
@@ -255,6 +255,8 @@ public class Board {
         ArrayList list =  new ArrayList<>();
         for(int y = 0; y < 8; y++) {
             for(int x = 0; x < 8; x++) {
+                    System.out.println("y is" + y);
+                    System.out.println("x is" + x);
 
                 Piece piece = board[y][x];
                 if(piece != null) {

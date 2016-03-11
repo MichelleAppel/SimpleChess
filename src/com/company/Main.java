@@ -1,6 +1,8 @@
 package com.company;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Scanner;
 
 public class Main {
 
@@ -13,11 +15,45 @@ public class Main {
     // declare new object from class Board
     private static Board board = new Board(BOARD_SIZE, AMOUNT_OF_PIECES);
 
+    // linked list
+    private static LinkedList<Board> queue = new LinkedList<>();
+
     public static void main(String[] args) {
         board.addPieces();
         //wipeScreen();
         board.printBoard();
         //delay(2000);
+
+        Scanner input = new Scanner(System.in);
+
+        System.out.println("Please enter the start and end position of the piece you want to move: ");
+        System.out.println("For example: K1 K2");
+
+        String s = input.next(); // getting a String value
+        System.out.println(s);
+
+
+        // add first grid to queue
+        queue.add(board);
+
+        for(int i = 0; i < 5; i++) {
+            System.out.println("i is" + i);
+
+            // retrieve first element and generate all children
+            Board first_board = queue.getFirst();
+            ArrayList<Board> new_children = first_board.checkMovesForAll(false, first_board);
+            for (int j = 0; j < new_children.size(); j++) {
+                Board child = new_children.get(j);
+                child.printBoard();
+                queue.add(child);
+            }
+
+            // remove first element from grid
+            queue.removeFirst();
+        }
+
+        queue.getLast().printBoard();
+
 
         /*
         ArrayList<Board> list = board.checkMovesForPawn(true, 6, 0, board);
@@ -39,6 +75,7 @@ public class Main {
         }
         */
 
+        /*
         ArrayList<Board> list4 = board.checkMovesForAll(false, board);
 
         for (Board aList4 : list4) {
@@ -52,6 +89,7 @@ public class Main {
         for (Board aList5 : list5) {
             aList5.printBoard();
         }
+        */
     }
 
     // wipe the screen
