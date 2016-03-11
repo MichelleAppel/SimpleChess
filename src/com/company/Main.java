@@ -24,18 +24,12 @@ public class Main {
         board.printBoard();
         //delay(2000);
 
-        Scanner input = new Scanner(System.in);
-
-        System.out.println("Please enter the start and end position of the piece you want to move: ");
-        System.out.println("For example: K1 K2");
-
-        String s = input.next(); // getting a String value
-        System.out.println(s);
-
-
         // add first grid to queue
         queue.add(board);
 
+        System.out.println(getUserInput());
+
+        /*
         for(int i = 0; i < 5; i++) {
             System.out.println("i is" + i);
 
@@ -53,7 +47,7 @@ public class Main {
         }
 
         queue.getLast().printBoard();
-
+        */
 
         /*
         ArrayList<Board> list = board.checkMovesForPawn(true, 6, 0, board);
@@ -106,5 +100,85 @@ public class Main {
         } catch(InterruptedException ex) {
             Thread.currentThread().interrupt();
         }
+    }
+
+    private static int getUserInput() {
+        Scanner input = new Scanner(System.in);
+
+        System.out.println("Please enter the start and end position of the piece you want to move.");
+        System.out.println("Please use capital letters and no spaces, like this: D2D4");
+        String input_string = input.next(); // getting a String value
+        //System.out.println(input_string);
+
+        int startX = -1;
+        int startY = -1;
+        int endX = -1;
+        int endY = -1;
+
+        String startXString = input_string.substring(0, 1);
+        String startYString = input_string.substring(1, 2);
+        String endXString = input_string.substring(2, 3);
+        String endYString = input_string.substring(3, 4);
+
+        // validate start X (is the char in the correct range?)
+        char startXChar = startXString.charAt(0);
+        if (startXChar == 'A' || startXChar == 'a') {
+            startX = 0;
+        } else if (startXChar == 'B' || startXChar == 'b') {
+            startX = 1;
+        } else if (startXChar == 'C' || startXChar == 'c') {
+            startX = 2;
+        } else if (startXChar == 'D' || startXChar == 'd') {
+            startX = 3;
+        } else if (startXChar == 'E' || startXChar == 'e') {
+            startX = 4;
+        } else if (startXChar == 'F' || startXChar == 'f') {
+            startX = 5;
+        } else if (startXChar == 'G' || startXChar == 'g') {
+            startX = 6;
+        } else if (startXChar == 'H' || startXChar == 'h') {
+            startX = 7;
+        }
+
+        // validate start Y (is the int in the correct range?)
+        int startYInt = Integer.parseInt(startYString);
+        if (startYInt >= 1 && startYInt <= 8) {
+            startY = startYInt-1;
+        } else {
+            // error
+        }
+
+        // validate end X (is the char in the correct range?)
+        char endXChar = endXString.charAt(0);
+        if (endXChar == 'A' || endXChar == 'a') {
+            endX = 0;
+        } else if (endXChar == 'B' || endXChar == 'b') {
+            endX = 1;
+        } else if (endXChar == 'C' || endXChar == 'c') {
+            endX = 2;
+        } else if (endXChar == 'D' || endXChar == 'd') {
+            endX = 3;
+        } else if (endXChar == 'E' || endXChar == 'e') {
+            endX = 4;
+        } else if (endXChar == 'F' || endXChar == 'f') {
+            endX = 5;
+        } else if (endXChar == 'G' || endXChar == 'g') {
+            endX = 6;
+        } else if (endXChar == 'H' || endXChar == 'h') {
+            endX = 7;
+        }
+
+        // validate end Y (is the int in the correct range?)
+        int endYInt = Integer.parseInt(endYString);
+        if (endYInt >= 1 && endYInt <= 8) {
+            endY = endYInt-1;
+        } else {
+            // error
+        }
+        //return startX;
+        //return startY;
+        return endX;
+        //return endY;
+
     }
 }
