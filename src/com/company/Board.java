@@ -277,8 +277,8 @@ public class Board {
                             minilist = checkMovesForKing(color, x, y, input_board);
                         }
                     }
-                    for(int i = 0; i < minilist.size(); i++) {
-                        list.add(minilist.get(i));
+                    for (Object aMinilist : minilist) {
+                        list.add(aMinilist);
                     }
                 }
             }
@@ -324,11 +324,14 @@ public class Board {
     // prints the board (the matrix, not the object itself)
     public void printBoard() {
         for (int i = 0; i < size; i++){
+            System.out.print((8-i) + "  ");
             for (int j = 0; j < size; j++){
                 System.out.print((board[j][i] == null? ".": board[j][i]) + " ");
             }
             System.out.println();
+
         }
+        System.out.println("   a b c d e f g h");
         System.out.println("");
     }
 }
