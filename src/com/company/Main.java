@@ -27,7 +27,10 @@ public class Main {
         // add first grid to queue
         queue.add(board);
 
-        System.out.println(getUserInput());
+        int[] coordinates = getUserInput();
+        for(int i = 0; i < 4; i++) {
+            System.out.println(coordinates[i]);
+        }
 
         /*
         for(int i = 0; i < 5; i++) {
@@ -102,7 +105,7 @@ public class Main {
         }
     }
 
-    private static int getUserInput() {
+    private static int[] getUserInput() {
         Scanner input = new Scanner(System.in);
 
         System.out.println("Please enter the start and end position of the piece you want to move.");
@@ -175,10 +178,9 @@ public class Main {
         } else {
             // error
         }
-        //return startX;
-        //return startY;
-        return endX;
-        //return endY;
+
+        int[] coordinates = {startX, startY, endX, endY};
+        return coordinates;
 
     }
 }
