@@ -19,7 +19,10 @@ public class Main {
     private static LinkedList<Board> queue = new LinkedList<>();
 
     public static void main(String[] args) {
-        board.addPieces();
+        //board.addPieces();
+        System.out.println("The TEST board below is to test the score calculation:");
+        board.addTestBoard();   // test board
+
         //wipeScreen();
         board.printBoard();
         //delay(2000);
@@ -27,6 +30,19 @@ public class Main {
         // add first grid to queue
         queue.add(board);
 
+
+        int pieceAmount = AMOUNT_OF_PIECES; // used to know whether status is begingame, midgame or endgame
+
+        // CALCULATING SCORE AI ALGORITHM: (parameters are pieceAmount, player color and board)
+        int whiteScore = board.calculateScoreForOnePlayer(pieceAmount, true, board);
+        int blackScore = board.calculateScoreForOnePlayer(pieceAmount, false, board);
+
+        System.out.println("The score for black/up (false) is: " + blackScore);
+        System.out.println("The score for white/down (true) is: " + whiteScore);
+
+
+
+        /*
         int[] coordinates = getUserInput();
         int startX = coordinates[0];
         int startY = coordinates[1];
@@ -38,12 +54,15 @@ public class Main {
         System.out.println(endX);
         System.out.println(endY);
 
-
         if(board.isMoveValid(startX, startY, endX, endY, board)) {
             System.out.println("YEAHHHH");
         }
-        /*
-        for(int i = 0; i < 5; i++) {
+
+        */
+
+
+/*
+        for(int i = 0; i < 3; i++) {
             System.out.println("i is" + i);
 
             // retrieve first element and generate all children
@@ -60,9 +79,10 @@ public class Main {
         }
 
         queue.getLast().printBoard();
-        */
+*/
 
-        /*
+
+/*
         ArrayList<Board> list = board.checkMovesForPawn(true, 6, 0, board);
 
         for(int i = 0; i < list.size(); i++) {
@@ -80,7 +100,8 @@ public class Main {
         for(int i = 0; i < list3.size(); i++) {
             list3.get(i).printBoard();
         }
-        */
+*/
+
 
         /*
         ArrayList<Board> list4 = board.checkMovesForAll(false, board);
@@ -191,6 +212,5 @@ public class Main {
 
         int[] coordinates = {startX, startY, endX, endY};
         return coordinates;
-
     }
 }

@@ -141,7 +141,6 @@ public class Board {
         return list;
     }
 
-
     public ArrayList checkMovesForRook(boolean color, int x, int y, Board input_board) {
         ArrayList<Board> list = new ArrayList<>();
         int value = 5;
@@ -323,6 +322,38 @@ public class Board {
         addKings();
     }
 
+    public void addTestBoard() {
+        // white pawns
+        board[0][6] = new Piece(true, 1, 1, 6);
+        board[1][5] = new Piece(true, 1, 1, 6);
+        board[2][4] = new Piece(true, 1, 1, 6);
+        board[3][5] = new Piece(true, 1, 1, 6);
+        board[4][6] = new Piece(true, 1, 1, 6);
+        board[5][6] = new Piece(true, 1, 1, 6);
+        board[6][6] = new Piece(true, 1, 1, 6);
+        board[7][5] = new Piece(true, 1, 1, 6);
+
+        // black pawns
+        board[0][1] = new Piece(false, 1, 0, 1);
+        board[1][1] = new Piece(false, 1, 1, 1);
+        board[2][1] = new Piece(false, 1, 2, 1);
+        board[3][1] = new Piece(false, 1, 3, 1);
+        board[4][1] = new Piece(false, 1, 4, 1);
+        board[5][1] = new Piece(false, 1, 5, 1);
+        board[6][1] = new Piece(false, 1, 6, 1);
+        board[7][1] = new Piece(false, 1, 7, 1);
+
+        // the rooks
+        board[0][7] = new Piece(true, 5, 0, 7);         // white rook 1
+        board[7][7] = new Piece(true, 5, 7, 7);         // white rook 2
+        board[0][0] = new Piece(false, 5, 0, 0);        // black rook 1
+        board[7][0] = new Piece(false, 5, 7, 0);        // black rook 2
+
+        // the kings
+        board[4][7] = new Piece(true, 9, 4, 7);         // white king
+        board[4][0] = new Piece(false, 9, 4, 0);        // black king
+    }
+
     // adds black and white pawns to board
     public void addPawns() {
         for(int i = 0; i < 8; i++) {
@@ -364,4 +395,352 @@ public class Board {
         System.out.println("   a b c d e f g h");
         System.out.println("");
     }
+
+
+
+    public int calculateScoreForOnePlayer(int pieceAmount, boolean color, Board input_board) {
+        int score = 0;
+        int pawns_factor_weight;
+        int rooks_factor_weight;
+        int kings_factor_weight;
+        int pawns_score;
+        int rooks_score;
+        int kings_score;
+
+        if(pieceAmount >= 16) {
+            // set values for begingame
+            pawns_factor_weight = 2;
+            rooks_factor_weight = 2;
+            kings_factor_weight = 1;
+
+        } else if(pieceAmount >= 8 && pieceAmount < 16) {
+            // set values for midgame
+            pawns_factor_weight = 2;
+            rooks_factor_weight = 3;
+            kings_factor_weight = 2;
+
+        } else {
+            // set values for endgame
+            pawns_factor_weight = 1;
+            rooks_factor_weight = 3;
+            kings_factor_weight = 3;
+        }
+
+        // loop through the matrix to find all piece positions
+        for(int y = 0; y < 8; y++) {
+            for (int x = 0; x < 8; x++) {
+                // calculate pawn score based on amount of pawns and strength of their positions
+                pawns_score = calulatePawnScores(pawns_factor_weight, color, input_board, y, x);
+                score += pawns_score;
+
+                // calculate rook score based on amount of rooks and strength of their positions
+                rooks_score = calculateRookScores(rooks_factor_weight, color, input_board, y, x);
+                score += rooks_score;
+
+                // calculate king score based on strength of it's position
+                kings_score = calculateKingScores(kings_factor_weight, color, input_board, y, x);
+                score += kings_score;
+            }
+        }
+        return score;
+    }
+
+    public int calulatePawnScores(int pawn_factor_weight, boolean color, Board input_board, int y, int x) {
+        // 2 eigen pionnen naast elkaar: bonus
+        // 3+ eigen pionnen naast elkaar: dubbele bonus
+        // 2 eigen pionnen die elkaar schuin dekken: bonus
+        // 3 eigen pionnen die elkaar schuin dekken: dubbele bonus
+        // punten voor aantal pionnen
+
+        int score = 0;
+        // calculate score
+
+        int pieceValue;
+        boolean pieceColor;
+        int piece2Value;
+        boolean piece2Color;
+        int piece3Value;
+        boolean piece3Color;
+        int piece4Value;
+        boolean piece4Color;
+
+        Piece piece = board[y][x];
+        if (piece != null) {
+            pieceValue = piece.getValue();
+            pieceColor = piece.getColor();
+
+            // patroon 1: 2 of 3 pionnen naast elkaar
+            if (y + 1 < 8) {
+                Piece piece2 = board[y + 1][x];
+                if (piece2 != null) {
+                    piece2Value = piece2.getValue();
+                    piece2Color = piece2.getColor();
+
+                    if (pieceValue == 1 && piece2Value == 1 &&
+                            pieceColor == color && piece2Color == color) {
+                        score += 1*pawn_factor_weight;
+                    }
+
+                    if (y + 2 < 8) {
+                        Piece piece3 = board[y + 2][x];
+                        if (piece3 != null) {
+                            piece3Value = piece3.getValue();
+                            piece3Color = piece3.getColor();
+                            if (pieceValue == 1 && piece2Value == 1 &&
+                                    piece3Value == 1 && pieceColor == color &&
+                                    piece2Color == color && piece3Color == color) {
+                                score += 2*pawn_factor_weight;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // patroon 2: 2 of 3 pionnen met schuine dekking
+            if (y + 1 < 8 && x + 1 < 8) {
+                Piece piece4 = board[y + 1][x + 1];
+                if (piece4 != null) {
+                    piece4Value = piece4.getValue();
+                    piece4Color = piece4.getColor();
+
+                    if (pieceValue == 1 && piece4Value == 1 &&
+                            pieceColor == color && piece4Color == color) {
+                        score += 3*pawn_factor_weight;
+                    }
+                }
+            }
+
+            if (y - 1 >= 0 && x + 1 < 8) {
+                Piece piece4 = board[y - 1][x + 1];
+                if (piece4 != null) {
+                    piece4Value = piece4.getValue();
+                    piece4Color = piece4.getColor();
+
+                    if (pieceValue == 1 && piece4Value == 1 &&
+                            pieceColor == color && piece4Color == color) {
+                        score += 3*pawn_factor_weight;
+                    }
+                }
+            }
+
+            if (y + 1 < 8 && x - 1 >= 0) {
+                Piece piece4 = board[y + 1][x - 1];
+                if (piece4 != null) {
+                    piece4Value = piece4.getValue();
+                    piece4Color = piece4.getColor();
+
+                    if (pieceValue == 1 && piece4Value == 1 &&
+                            pieceColor == color && piece4Color == color) {
+                        score += 3*pawn_factor_weight;
+                    }
+                }
+            }
+
+            if (y - 1 >= 0 && x - 1 >= 0) {
+                Piece piece4 = board[y - 1][x - 1];
+                if (piece4 != null) {
+                    piece4Value = piece4.getValue();
+                    piece4Color = piece4.getColor();
+
+                    if (pieceValue == 1 && piece4Value == 1 &&
+                            pieceColor == color && piece4Color == color) {
+                        score += 3*pawn_factor_weight;
+                    }
+                }
+            }
+        }
+        return score;
+    }
+
+    public int calculateRookScores(int rook_factor_weight, boolean color, Board input_board, int y, int x) {
+        // 2 of your own rooks on one line gives you a bonus
+        // the opponent's king in the move-line of your rook gives you a bonus
+        // the (amount of) rooks itself give you a bonus
+        // the move space of the rook gives you a bonus (greater range = greater bonus)
+
+        int score = 0;
+        int value = 5;  // value for rooks
+        Piece piece = board[y][x];
+
+        if(piece != null && piece.getValue() == value && piece.getColor() == color) {
+            // points for having a rook
+            score += 10 + 3 * rook_factor_weight;
+
+            int x1 = x+1;
+            int y1 = y+1;
+            int rookMoveSpace = 0;
+
+            // check fields to the right until you find a piece or hit the edge of the board
+            while(x1 < 8 && board[y][x1] == null) {
+                x1++;
+                rookMoveSpace++;
+            }
+
+            // if that piece is the opponent's king, you get a bonus
+            if(x1 < 8 && board[y][x1].getColor() != color && board[y][x1].getValue() == 9) {
+                score += 5 + rook_factor_weight;
+            }
+
+            // if that piece is your own (other) rook, you get a bonus (twice of course, so 3 = 6)
+            if(x1 < 8 && board[y][x1].getColor() == color && board[y][x1].getValue() == 5) {
+                score += 3;
+            }
+
+
+            // check fields downwards until you find a piece or hit the edge of the board
+            while(y1 < 8 && board[y1][x] == null) {
+                y1++;
+                rookMoveSpace++;
+            }
+
+            // if that piece is the opponent's king, you get a bonus
+            if(y1 < 8 && board[y1][x].getColor() != color && board[y1][x].getValue() == 9) {
+                score += 5 + rook_factor_weight;
+            }
+
+            // if that piece is your own (other) rook, you get a bonus (twice of course, so 3 = 6)
+            if(y1 < 8 && board[y1][x].getColor() == color && board[y1][x].getValue() == 5) {
+                score += 3;
+            }
+
+            x1 = x-1;
+            y1 = y-1;
+
+            // check fields to the left until you find a piece or hit the edge of the board
+            while(x1 >= 0 && board[y][x1] == null) {
+                x1--;
+                rookMoveSpace++;
+            }
+
+            // if that piece is the opponent's king, you get a bonus
+            if(x1 >= 0 && board[y][x1].getColor() != color && board[y][x1].getValue() == 9) {
+                score += 5 + rook_factor_weight;
+            }
+
+            // if that piece is your own (other) rook, you get a bonus (twice of course, so 3 = 6)
+            if(x1 >= 0 && board[y][x1].getColor() == color && board[y][x1].getValue() == 5) {
+                score += 3;
+            }
+
+            // check fields upwards until you find a piece or hit the edge of the board
+            while(y1 >= 0 && board[y1][x] == null) {
+                y1--;
+                rookMoveSpace++;
+            }
+
+            // if that piece is the opponent's king, you get a bonus
+            if(y1 >= 0 && board[y1][x].getColor() != color && board[y1][x].getValue() == 9) {
+                score += 5 + rook_factor_weight;
+            }
+
+            // if that piece is your own (other) rook, you get a bonus (twice of course, so 3 = 6)
+            if(y1 >= 0 && board[y1][x].getColor() == color && board[y1][x].getValue() == 5) {
+                score += 3;
+            }
+
+            score += rookMoveSpace;
+        }
+        return score;
+    }
+
+    public int calculateKingScores(int king_factor_weight, boolean color, Board input_board, int y, int x) {
+        // aantal eigen omringende stukken: bonus
+        // aantal omringende stukken van de tegenstander: malus
+
+        int score = 0;
+        Piece piece = board[y][x];
+        if(piece != null && piece.getValue() == 9 && piece.getColor() == color) {
+
+            if (y + 1 < 8 && x + 1 < 8) {
+                Piece otherPiece = board[y + 1][x + 1];
+                if (otherPiece != null) {
+                    if (piece.getColor() == color) {
+                        score += 1*king_factor_weight;
+                    } else {
+                        score -= 1*king_factor_weight;
+                    }
+                }
+            }
+
+            if (y + 1 < 8) {
+                Piece otherPiece = board[y + 1][x];
+                if (otherPiece != null) {
+                    if (piece.getColor() == color) {
+                        score += 1*king_factor_weight;
+                    } else {
+                        score -= 1*king_factor_weight;
+                    }
+                }
+            }
+
+            if (y + 1 < 8 && x - 1 >= 0) {
+                Piece otherPiece = board[y + 1][x - 1];
+                if (otherPiece != null) {
+                    if (piece.getColor() == color) {
+                        score += 1*king_factor_weight;
+                    } else {
+                        score -= 1*king_factor_weight;
+                    }
+                }
+            }
+
+            if (x + 1 < 8) {
+                Piece otherPiece = board[y][x + 1];
+                if (otherPiece != null) {
+                    if (piece.getColor() == color) {
+                        score += 1*king_factor_weight;
+                    } else {
+                        score -= 1*king_factor_weight;
+                    }
+                }
+            }
+
+
+            if (x - 1 >= 0) {
+                Piece otherPiece = board[y][x - 1];
+                if (otherPiece != null) {
+                    if (piece.getColor() == color) {
+                        score += 1*king_factor_weight;
+                    } else {
+                        score -= 1*king_factor_weight;
+                    }
+                }
+            }
+
+            if (y - 1 >= 0 && x + 1 < 8) {
+                Piece otherPiece = board[y - 1][x + 1];
+                if (otherPiece != null) {
+                    if (piece.getColor() == color) {
+                        score += 1*king_factor_weight;
+                    } else {
+                        score -= 1*king_factor_weight;
+                    }
+                }
+            }
+
+            if (y - 1 >= 0) {
+                Piece otherPiece = board[y - 1][x];
+                if (otherPiece != null) {
+                    if (piece.getColor() == color) {
+                        score += 1*king_factor_weight;
+                    } else {
+                        score -= 1*king_factor_weight;
+                    }
+                }
+            }
+
+            if (y - 1 >= 0 && x - 1 >= 0) {
+                Piece otherPiece = board[y - 1][x - 1];
+                if (otherPiece != null) {
+                    if (piece.getColor() == color) {
+                        score += 1*king_factor_weight;
+                    } else {
+                        score -= 1*king_factor_weight;
+                    }
+                }
+            }
+        }
+        return score;
+    }
+
 }
