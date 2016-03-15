@@ -38,28 +38,32 @@ public class Board {
         ArrayList minilist =  new ArrayList<>();
         if(x1 >= 0 && x1 < 8 && y1 >= 0 && y1 < 8 && x2 >= 0 && x2 < 8 && y2 >= 0 && y2 < 8) {
             Piece piece = board[x1][y1];
+
             if (piece != null) {
                 int value = piece.getValue();
                 boolean color = piece.getColor();
 
                 // if pawn
                 if (value == 1) {
-                    minilist = checkMovesForPawn(color, x1, y1, input_board);
+                    minilist = checkMovesForPawn(color, y1, x1, input_board);
                     // if rook
                 } else if (value == 5) {
-                    minilist = checkMovesForRook(color, x1, y1, input_board);
+                    minilist = checkMovesForRook(color, y1, x1, input_board);
                     // if king
                 } else if (value == 9) {
-                    minilist = checkMovesForKing(color, x1, y1, input_board);
+                    minilist = checkMovesForKing(color, y1, x1, input_board);
                 }
 
-                Board board1 = pieceMoves(color, x1, y1, x2, y2, value, input_board);
+                Board board1 = pieceMoves(color, y1, x1, y2, x2, value, input_board);
 
-                for (Object aMinilist : minilist) {
+                for (int i = 0; i < minilist.size(); i++) {
+                    Object aMinilist = minilist.get(i);
                     Board board2 = (Board) aMinilist;
                     Piece piece1 = board1.board[x2][y2];
                     Piece piece2 = board2.board[x2][y2];
-                    if (piece1 != null && piece2 != null && piece2.equals(piece1)) return true;
+
+                    if (piece1 != null && piece2 != null && piece2.toString().equals(piece1.toString())) return true;
+
                 }
             }
         }
@@ -321,6 +325,24 @@ public class Board {
         addRooks();
         addKings();
     }
+
+    public int getValue(int x, int y){
+        Piece piece = board[y][x];
+        if(piece != null) {
+            return piece.getValue();
+        }
+        return 0;
+    }
+
+    public boolean getColor(int x, int y){
+        Piece piece = board[y][x];
+        if(piece != null) {
+            return piece.getColor();
+        }
+        return false;
+    }
+
+
 
     public void addTestBoard() {
         // white pawns
