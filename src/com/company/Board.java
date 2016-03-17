@@ -198,6 +198,7 @@ public class Board {
         Board tempBoard;
         Node tempNode;
 
+        // for white
         if(color) {
 
             x1 = x-1;
@@ -209,7 +210,7 @@ public class Board {
             }
 
             x1 = x-2;
-            if(x == 6 && board[y1][x1] == null && board[y][x1] == null) {
+            if(x == 6 && board[y1][x-1] == null && board[y][x1] == null) {
                 tempBoard = pieceMoves(color, x, y, x1, y1, value, input_board);
                 tempNode = new Node(input_board, tempBoard);
                 list.add(tempNode);
@@ -230,6 +231,7 @@ public class Board {
                 tempNode = new Node(input_board, tempBoard);
                 list.add(tempNode);
             }
+            //for black
         } else {
             x1 = x+1;
             y1 = y;
@@ -240,7 +242,7 @@ public class Board {
             }
 
             x1 = x+2;
-            if(x == 1 && board[y1][x1] == null && board[y][x1] == null) {
+            if(x == 1 && board[y1][x+1] == null && board[y][x1] == null) {
                 tempBoard = pieceMoves(color, x, y, x1, y1, value, input_board);
                 tempNode = new Node(input_board, tempBoard);
                 list.add(tempNode);
