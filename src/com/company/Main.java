@@ -9,16 +9,18 @@ public class Main {
     private static int BOARD_SIZE = 8;                  // size of a chess board
     private static final int AMOUNT_OF_PIECES = 22;     // 8x2 pawns, 2x2 rooks, 1x2 kings
 
+    private static Node node;
+
     // declare new object from the Board class
     private static Board board = new Board(BOARD_SIZE, AMOUNT_OF_PIECES);
 
     // declare new LinkedList to keep track of all board configurations
-    private static LinkedList<Board> queue = new LinkedList<>();
+    //private static LinkedList<Board> queue = new LinkedList<>();
 
 
     public static void main(String[] args) {
         board.addPieces();          // adds the pieces to the board
-        queue.add(board);           // adds first board to the queue
+        //queue.add(board);           // adds first board to the queue
 
         //System.out.println("The TEST board below is to test the score calculation:");
         //board.addTestBoard();     // adds the pieces in a specific way (to test score function)
@@ -28,6 +30,7 @@ public class Main {
         // pieceAmount is used to know whether the game status is begingame, midgame or endgame
         int pieceAmount = AMOUNT_OF_PIECES;
 
+        //calculateBestMoveForCPU(board, 22);
         /*
         // CALCULATING SCORE AI ALGORITHM SCORE TESTING
         // parameters are int pieceAmount, boolean color and Board board)
@@ -43,6 +46,25 @@ public class Main {
             board.printBoard();
 
             // add cpu moves here
+            ArrayList<Node> new_children = board.checkMovesForAll(false, board);
+            int greatestDifference = 0;
+            Board bestBoard = board;
+            for (int j = 0; j < new_children.size(); j++) {
+                node = new_children.get(j);
+                Board current_board = node.getLeafBoard();
+                current_board.printBoard();
+                int whiteScore = current_board.calculateScoreForOnePlayer(pieceAmount, true, current_board);
+                int blackScore = current_board.calculateScoreForOnePlayer(pieceAmount, false, current_board);
+                System.out.println("The score for black/up (false) is: " + blackScore);
+                System.out.println("The score for white/down (true) is: " + whiteScore);
+                int scoreDifference = blackScore-whiteScore;
+                System.out.println("The score difference is: " + scoreDifference);
+
+                if(scoreDifference > greatestDifference) {
+                    greatestDifference = scoreDifference;
+                    board = current_board;
+                }
+            }
         }
 
 
@@ -79,11 +101,66 @@ public class Main {
         System.out.println("The greatest difference is: " + greatestDifference);
         System.out.println("The best move is:");
         bestBoard.printBoard();
+        */
+
+        /*
+        // get first board
+        Board first_board = queue.getFirst();
+
+        // calculate all moves for black
+        ArrayList<Board> black1_new_children = first_board.checkMovesForAll(false, first_board);
+        queue.addAll(black1_new_children);
+
+        //for(int i = 0; i < queue.size(); i++) {
+        //    queue.get(i).printBoard();
+        //}
+
+        // remove first element from grid
+        queue.removeFirst();
+
+        int currentQueueSize = queue.size();
+        for(int i = 0; i < currentQueueSize; i++) {
+            Board current_board = queue.get(i);
+
+            // calculate all moves for white
+            ArrayList<Board> white_new_children = current_board.checkMovesForAll(true, current_board);
+            queue.addAll(white_new_children);
+
+            // remove first element from grid
+            queue.remove(i);
+        }
+
+        int newCurrentQueueSize = queue.size();
+        for(int i = 0; i < newCurrentQueueSize; i++) {
+            Board current_board = queue.get(i);
+
+            // calculate all moves for black
+            ArrayList<Board> black2_new_children = current_board.checkMovesForAll(false, current_board);
+            queue.addAll(black2_new_children);
+
+            // remove first element from grid
+            queue.remove(i);
+        }
+
+        for(int i = 0; i < queue.size(); i++) {
+            queue.get(i).printBoard();
+        }
+        */
 
 
-*/
+        //ArrayList<Board> white_new_children;
+        //for(int i = 0; i < queue.size(); i++) {
+        //    Board sub_board = queue.get(i);
+        //   ArrayList<Board> sub_children = sub_board.checkMovesForAll(true, sub_board);
+        //    queue.addAll(sub_children);
+        //}
 
-/*
+        //for(int i = 0; i < queue.size(); i++) {
+        //    queue.get(i).printBoard();
+        //}
+
+
+        /*
         for(int i = 0; i < 3; i++) {
             System.out.println("i is" + i);
 
@@ -91,6 +168,7 @@ public class Main {
             Board first_board = queue.getFirst();
             ArrayList<Board> new_children = first_board.checkMovesForAll(false, first_board);
             for (int j = 0; j < new_children.size(); j++) {
+                System.out.println("j is" + j);
                 Board child = new_children.get(j);
                 child.printBoard();
                 queue.add(child);
@@ -101,7 +179,7 @@ public class Main {
         }
 
         queue.getLast().printBoard();
-*/
+        */
 
 
 /*
@@ -258,5 +336,68 @@ public class Main {
         }
         int[] coordinates = {startX, startY, endX, endY};
         return coordinates;
+    }
+
+
+    private static void calculateBestMoveForCPU(Board input_board, int piece_amount) {
+        // how deep in the search tree does the cpu have to look
+        // i.e. deepness of 1 is only the first possible moves and then the best score
+        // deepness of 3 is all moves of cpu, all moves of human, all moves of cpu and then the best score
+        int layerDeepnessOfMoves = 1;
+
+        if(piece_amount <= 22 && piece_amount > 16) {
+            layerDeepnessOfMoves = 1;
+        } else if(piece_amount <= 16 && piece_amount > 10) {
+            layerDeepnessOfMoves = 3;
+        } else if(piece_amount <= 10 && piece_amount > 5) {
+            layerDeepnessOfMoves = 5;
+        } else if(piece_amount <= 5 && piece_amount > 4) {
+            layerDeepnessOfMoves = 7;
+        } else if(piece_amount <= 4 && piece_amount > 0) {
+            layerDeepnessOfMoves = 9;
+        }
+
+        if(layerDeepnessOfMoves == 1) {
+            ArrayList<Node> new_children = input_board.checkMovesForAll(false, input_board);
+            // en dan score berekenen en het board met de beste score kiezen
+
+
+            for(int z = 0; z < new_children.size(); z++) {
+                //new_children.get(z).printBoard();
+            }
+
+            for(int k = 0; k < new_children.size(); k++) {
+                node = new_children.get(k);
+                Board current_board = node.getLeafBoard();
+                System.out.println("test");
+                current_board.printBoard();
+            }
+        }
+
+        if(layerDeepnessOfMoves == 3) {
+            ArrayList<Board> black1_new_children = input_board.checkMovesForAll(false, input_board);
+            System.out.println("test1");
+
+            ArrayList<Board> white_new_children = new ArrayList<>();
+            for(int i = 0; i < black1_new_children.size(); i++) {
+                Board current_board = black1_new_children.get(i);
+                white_new_children.addAll(current_board.checkMovesForAll(true, current_board));
+            }
+
+            System.out.println("test2");
+
+            ArrayList<Board> black2_new_children = new ArrayList<>();
+            for(int j = 0; j < white_new_children.size(); j++) {
+                Board current_board = white_new_children.get(j);
+                black2_new_children.addAll(current_board.checkMovesForAll(true, current_board));
+            }
+
+            System.out.println("test3");
+
+            for(int k = 0; k < black2_new_children.size(); k++) {
+                Board current_board = black2_new_children.get(k);
+                current_board.printBoard();
+            }
+        }
     }
 }
