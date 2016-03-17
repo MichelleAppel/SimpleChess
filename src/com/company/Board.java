@@ -21,8 +21,6 @@ public class Board {
     private Piece[][] board;
     private Piece[] pieces;
 
-    private Node node;
-
     private int piece_number = 1;
     private int amount_of_pieces;
 
@@ -133,8 +131,9 @@ public class Board {
      * 4. Methods for Moving Pieces *
      ****************************** */
 
+    // checks if a given move is valid by comparing it to the checkMovesFor a certain piece
     public boolean isMoveValid(int x1, int y1, int x2, int y2, Board input_board) {
-        ArrayList<Node> minilist =  new ArrayList<Node>();
+        ArrayList<Board> minilist =  new ArrayList<Board>();
         if(x1 >= 0 && x1 < 8 && y1 >= 0 && y1 < 8 && x2 >= 0 && x2 < 8 && y2 >= 0 && y2 < 8) {
             Piece piece = board[x1][y1];
 
@@ -154,23 +153,23 @@ public class Board {
                 }
 
                 Board board1 = pieceMoves(color, y1, x1, y2, x2, value, input_board);
+                if(input_board.board[x2][y2] == null || input_board.board[x2][y2].getColor() != color) {
+                    for (int i = 0; i < minilist.size(); i++) {
+                        Board board2 = minilist.get(i);
 
-                for (int i = 0; i < minilist.size(); i++) {
-                    node = minilist.get(i);
-                    Board board2 = node.getLeafBoard();
+                        Piece piece1 = board1.board[x2][y2];
+                        Piece piece2 = board2.board[x2][y2];
 
+                        if (piece1 != null && piece2 != null && piece1.getValue() == piece2.getValue()
+                                && piece1.getColor() == piece2.getColor()) return true;
 
-                    Piece piece1 = board1.board[x2][y2];
-                    Piece piece2 = board2.board[x2][y2];
-
-                    if (piece1 != null && piece2 != null && piece1.getValue() == piece2.getValue()
-                            && piece1.getColor() == piece2.getColor()) return true;
-
+                    }
                 }
             }
         }
         return false;
     }
+
 
     public void addPiece(Piece piece, int x, int y) {
         board[x][y] = piece;
@@ -180,6 +179,7 @@ public class Board {
         board[x][y] = null;
     }
 
+    // moves a piece from and to a given position
     public Board pieceMoves(boolean color, int x, int y, int x1, int y1, int value, Board input_board) {
         Board board1 = new Board(input_board);
 
@@ -192,13 +192,11 @@ public class Board {
     }
 
     public ArrayList checkMovesForPawn(boolean color, int x, int y, Board input_board) {
-        ArrayList<Node> list = new ArrayList<>();
+        ArrayList<Board> list = new ArrayList<>();
         int value = 1;
 
         int x1;
         int y1;
-        Board tempBoard;
-        Node tempNode;
 
         // for white
         if(color) {
@@ -206,77 +204,53 @@ public class Board {
             x1 = x-1;
             y1 = y;
             if (x1 >= 0 && board[y1][x1] == null) {
-                System.out.println("x: " + x1 + ", y: " + y1);
-                tempBoard = pieceMoves(color, x, y, x1, y1, value, input_board);
-                tempNode = new Node(input_board, tempBoard);
-                list.add(tempNode);
+                list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
 
             x1 = x-2;
             if(x == 6 && board[y1][x-1] == null && board[y][x1] == null) {
-                System.out.println("x: " + x1 + ", y: " + y1);
-                tempBoard = pieceMoves(color, x, y, x1, y1, value, input_board);
-                tempNode = new Node(input_board, tempBoard);
-                list.add(tempNode);
+                list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
 
             x1 = x-1;
             y1 = y-1;
             if(x1 >= 0 && y1 >= 0 && board[y1][x1] != null && !board[y1][x1].getColor()) {
-                System.out.println("x: " + x1 + ", y: " + y1);
-                tempBoard = pieceMoves(color, x, y, x1, y1, value, input_board);
-                tempNode = new Node(input_board, tempBoard);
-                list.add(tempNode);
-
+                list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
 
             y1 = y+1;
             if(x1 >= 0 && y1 >= 0 && board[y1][x1] != null && !board[y1][x1].getColor()) {
-                System.out.println("x: " + x1 + ", y: " + y1);
-                tempBoard = pieceMoves(color, x, y, x1, y1, value, input_board);
-                tempNode = new Node(input_board, tempBoard);
-                list.add(tempNode);
+                list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
             //for black
         } else {
             x1 = x+1;
             y1 = y;
             if (x1 >= 0 && board[y1][x1] == null) {
-                tempBoard = pieceMoves(color, x, y, x1, y1, value, input_board);
-                tempNode = new Node(input_board, tempBoard);
-                list.add(tempNode);
+                list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
 
             x1 = x+2;
             if(x == 1 && board[y1][x+1] == null && board[y][x1] == null) {
-                tempBoard = pieceMoves(color, x, y, x1, y1, value, input_board);
-                tempNode = new Node(input_board, tempBoard);
-                list.add(tempNode);
+                list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
 
             x1 = x+1;
             y1 = y-1;
             if(x1 >= 0 && y1 >= 0 && board[y1][x1] != null && board[y1][x1].getColor()) {
-                tempBoard = pieceMoves(color, x, y, x1, y1, value, input_board);
-                tempNode = new Node(input_board, tempBoard);
-                list.add(tempNode);
+                list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
 
             y1 = y+1;
             if(x1 >= 0 && x1 < 8 && y1 < 8 && board[y1][x1] != null && board[y1][x1].getColor()) {
-                tempBoard = pieceMoves(color, x, y, x1, y1, value, input_board);
-                tempNode = new Node(input_board, tempBoard);
-                list.add(tempNode);
+                list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
         }
         return list;
     }
 
     public ArrayList checkMovesForRook(boolean color, int x, int y, Board input_board) {
-        ArrayList<Node> list = new ArrayList<>();
-
-        Board tempBoard;
-        Node tempNode;
+        ArrayList<Board> list = new ArrayList<>();
 
         int value = 5;
         int x1 = x+1;
@@ -284,28 +258,20 @@ public class Board {
 
         // move naar rechts
         while(x1 < 8 && board[y][x1] == null) {
-            tempBoard = pieceMoves(color, x, y, x1, y, value, input_board);
-            tempNode = new Node(input_board, tempBoard);
-            list.add(tempNode);
+            list.add(pieceMoves(color, x, y, x1, y, value, input_board));
             x1++;
         }
         if(x1 < 8 && board[y][x1].getColor() != color) {
-            tempBoard = pieceMoves(color, x, y, x1, y, value, input_board);
-            tempNode = new Node(input_board, tempBoard);
-            list.add(tempNode);
+            list.add(pieceMoves(color, x, y, x1, y, value, input_board));
         }
 
         // move naar beneden
         while(y1 < 8 && board[y1][x] == null) {
-            tempBoard = pieceMoves(color, x, y, x, y1, value, input_board);
-            tempNode = new Node(input_board, tempBoard);
-            list.add(tempNode);
+            list.add(pieceMoves(color, x, y, x, y1, value, input_board));
             y1++;
         }
         if(y1 < 8 && board[y1][x].getColor() != color) {
-            tempBoard = pieceMoves(color, x, y, x, y1, value, input_board);
-            tempNode = new Node(input_board, tempBoard);
-            list.add(tempNode);
+            list.add(pieceMoves(color, x, y, x, y1, value, input_board));
         }
 
         x1 = x-1;
@@ -313,38 +279,28 @@ public class Board {
 
         // move naar links
         while(x1 >= 0 && board[y][x1] == null) {
-            tempBoard = pieceMoves(color, x, y, x1, y, value, input_board);
-            tempNode = new Node(input_board, tempBoard);
-            list.add(tempNode);
+            list.add(pieceMoves(color, x, y, x1, y, value, input_board));
             x1--;
         }
         if(x1 >= 0 && board[y][x1].getColor() != color) {
-            tempBoard = pieceMoves(color, x, y, x1, y, value, input_board);
-            tempNode = new Node(input_board, tempBoard);
-            list.add(tempNode);
+            list.add(pieceMoves(color, x, y, x1, y, value, input_board));
         }
 
         // move naar boven
         while(y1 >= 0 && board[y1][x] == null) {
-            tempBoard = pieceMoves(color, x, y, x, y1, value, input_board);
-            tempNode = new Node(input_board, tempBoard);
-            list.add(tempNode);
+            list.add(pieceMoves(color, x, y, x, y1, value, input_board));
             y1--;
         }
         if(y1 >= 0 && board[y1][x].getColor() != color) {
-            tempBoard = pieceMoves(color, x, y, x, y1, value, input_board);
-            tempNode = new Node(input_board, tempBoard);
-            list.add(tempNode);
+            list.add(pieceMoves(color, x, y, x, y1, value, input_board));
         }
 
         return list;
     }
 
     public ArrayList checkMovesForKing(boolean color, int x, int y, Board input_board) {
-        ArrayList<Node> list = new ArrayList<>();
+        ArrayList<Board> list = new ArrayList<>();
 
-        Board tempBoard;
-        Node tempNode;
 
         int x1;
         int y1;
@@ -356,13 +312,9 @@ public class Board {
             y1 = y;
 
             if (board[y1][x1] == null) {
-                tempBoard = pieceMoves(color, x, y, x1, y, value, input_board);
-                tempNode = new Node(input_board, tempBoard);
-                list.add(tempNode);
+                list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             } else if (board[y1][x1] != null && board[y1][x1].getColor() != color) {
-                tempBoard = pieceMoves(color, x, y, x1, y, value, input_board);
-                tempNode = new Node(input_board, tempBoard);
-                list.add(tempNode);
+                list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
         }
         if(x-1 >= 0 ) {
@@ -370,13 +322,9 @@ public class Board {
             y1 = y;
 
             if (board[y1][x1] == null) {
-                tempBoard = pieceMoves(color, x, y, x1, y, value, input_board);
-                tempNode = new Node(input_board, tempBoard);
-                list.add(tempNode);
+                list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             } else if (board[y1][x1] != null && board[y1][x1].getColor() != color) {
-                tempBoard = pieceMoves(color, x, y, x1, y, value, input_board);
-                tempNode = new Node(input_board, tempBoard);
-                list.add(tempNode);
+                list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
         }
         if(y+1 < 8) {
@@ -384,13 +332,9 @@ public class Board {
             y1 = y+1;
 
             if (board[y1][x1] == null) {
-                tempBoard = pieceMoves(color, x, y, x1, y, value, input_board);
-                tempNode = new Node(input_board, tempBoard);
-                list.add(tempNode);
+                list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             } else if (board[y1][x1] != null && board[y1][x1].getColor() != color) {
-                tempBoard = pieceMoves(color, x, y, x1, y, value, input_board);
-                tempNode = new Node(input_board, tempBoard);
-                list.add(tempNode);
+                list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
         }
         if(y-1 >= 0) {
@@ -398,13 +342,9 @@ public class Board {
             y1 = y-1;
 
             if (board[y1][x1] == null) {
-                tempBoard = pieceMoves(color, x, y, x1, y, value, input_board);
-                tempNode = new Node(input_board, tempBoard);
-                list.add(tempNode);
+                list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             } else if (board[y1][x1] != null && board[y1][x1].getColor() != color) {
-                tempBoard = pieceMoves(color, x, y, x1, y, value, input_board);
-                tempNode = new Node(input_board, tempBoard);
-                list.add(tempNode);
+                list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
         }
         if(y+1 < 8 && x+1 < 8) {
@@ -412,13 +352,9 @@ public class Board {
             y1 = y+1;
 
             if (board[y1][x1] == null) {
-                tempBoard = pieceMoves(color, x, y, x1, y, value, input_board);
-                tempNode = new Node(input_board, tempBoard);
-                list.add(tempNode);
+                list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             } else if (board[y1][x1] != null && board[y1][x1].getColor() != color) {
-                tempBoard = pieceMoves(color, x, y, x1, y, value, input_board);
-                tempNode = new Node(input_board, tempBoard);
-                list.add(tempNode);
+                list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
         }
         if(y-1 >= 0 && x+1 < 8) {
@@ -426,13 +362,9 @@ public class Board {
             y1 = y-1;
 
             if (board[y1][x1] == null) {
-                tempBoard = pieceMoves(color, x, y, x1, y, value, input_board);
-                tempNode = new Node(input_board, tempBoard);
-                list.add(tempNode);
+                list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             } else if (board[y1][x1] != null && board[y1][x1].getColor() != color) {
-                tempBoard = pieceMoves(color, x, y, x1, y, value, input_board);
-                tempNode = new Node(input_board, tempBoard);
-                list.add(tempNode);
+                list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
         }
         if(y+1 < 8 && x-1 >= 0) {
@@ -440,13 +372,9 @@ public class Board {
             y1 = y+1;
 
             if (board[y1][x1] == null) {
-                tempBoard = pieceMoves(color, x, y, x1, y, value, input_board);
-                tempNode = new Node(input_board, tempBoard);
-                list.add(tempNode);
+                list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             } else if (board[y1][x1] != null && board[y1][x1].getColor() != color) {
-                tempBoard = pieceMoves(color, x, y, x1, y, value, input_board);
-                tempNode = new Node(input_board, tempBoard);
-                list.add(tempNode);
+                list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
         }
         if(y-1 >= 0 && x-1 >= 0 && board[y-1][x-1] == null) {
@@ -454,28 +382,22 @@ public class Board {
             y1 = y-1;
 
             if (board[y1][x1] == null) {
-                tempBoard = pieceMoves(color, x, y, x1, y, value, input_board);
-                tempNode = new Node(input_board, tempBoard);
-                list.add(tempNode);
+                list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             } else if (board[y1][x1] != null && board[y1][x1].getColor() != color) {
-                tempBoard = pieceMoves(color, x, y, x1, y, value, input_board);
-                tempNode = new Node(input_board, tempBoard);
-                list.add(tempNode);
+                list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
         }
         return list;
     }
 
     public ArrayList checkMovesForAll(boolean color, Board input_board) {
-        ArrayList<Node> list =  new ArrayList<Node>();
+        ArrayList<Board> list =  new ArrayList<Board>();
         for(int y = 0; y < 8; y++) {
             for(int x = 0; x < 8; x++) {
-                    System.out.println("y is" + y);
-                    System.out.println("x is" + x);
 
                 Piece piece = board[y][x];
                 if(piece != null) {
-                    ArrayList<Node> minilist =  new ArrayList<Node>();
+                    ArrayList<Board> minilist =  new ArrayList<Board>();
 
                     int getValue = piece.getValue();
                     boolean getColor = piece.getColor();
@@ -492,7 +414,7 @@ public class Board {
                             minilist = checkMovesForKing(color, x, y, input_board);
                         }
                     }
-                    for (Node aMinilist : minilist) {
+                    for (Board aMinilist : minilist) {
                         list.add(aMinilist);
                     }
                 }
