@@ -1,5 +1,7 @@
 package com.company;
 
+import com.apple.eawt.AppEvent;
+
 import java.util.ArrayList;
 
         /* Table of Contents
@@ -219,14 +221,14 @@ public class Board {
             }
 
             y1 = y+1;
-            if(x1 >= 0 && y1 >= 0 && board[y1][x1] != null && !board[y1][x1].getColor()) {
+            if(x1 >= 0 && y1 < 8 && board[y1][x1] != null && !board[y1][x1].getColor()) {
                 list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
             //for black
         } else {
             x1 = x+1;
             y1 = y;
-            if (x1 >= 0 && board[y1][x1] == null) {
+            if (x1 < 8 && board[y1][x1] == null) {
                 list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
 
@@ -237,7 +239,7 @@ public class Board {
 
             x1 = x+1;
             y1 = y-1;
-            if(x1 >= 0 && y1 >= 0 && board[y1][x1] != null && board[y1][x1].getColor()) {
+            if(x1 < 8 && y1 >= 0 && board[y1][x1] != null && board[y1][x1].getColor()) {
                 list.add(pieceMoves(color, x, y, x1, y1, value, input_board));
             }
 
@@ -773,5 +775,54 @@ public class Board {
         }
         System.out.println("    a  b  c  d  e  f  g  h");
         System.out.println("");
+    }
+
+    public boolean gameIsNotFinished() {
+        boolean whiteKingIsAlive = false;
+        boolean blackKingIsAlive = false;
+
+        for(int i = 0; i < size; i++) {
+            for(int j = 0; j < size; j++) {
+               if(board[j][i] != null && board[j][i].getValue() == 9) {
+                   if(board[j][i].getColor()) {
+                       whiteKingIsAlive = true;
+                    } else if(!board[j][i].getColor()) {
+                       blackKingIsAlive = true;
+                    }
+                }
+            }
+        }
+
+        if(whiteKingIsAlive && blackKingIsAlive) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public String getWinner() {
+        boolean whiteKingIsAlive = false;
+        boolean blackKingIsAlive = false;
+
+        for(int i = 0; i < size; i++) {
+            for(int j = 0; j < size; j++) {
+                if(board[j][i] != null && board[j][i].getValue() == 9) {
+                    if(board[j][i].getColor()) {
+                        whiteKingIsAlive = true;
+                    }
+                    if(!board[j][i].getColor()) {
+                        blackKingIsAlive = true;
+                    }
+                }
+            }
+        }
+
+        if(!whiteKingIsAlive) {
+            return "Congratulations black, you have won the game!";
+        } else if(!blackKingIsAlive) {
+            return "Congratulations white, you have won the game!";
+        }
+
+        return "I don't know who the winner is.";
     }
 }

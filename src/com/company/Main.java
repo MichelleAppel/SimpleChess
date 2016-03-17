@@ -19,7 +19,7 @@ public class Main {
 
     public static void main(String[] args) {
         board.addPieces();          // adds the pieces to the board
-        //queue.add(board);           // adds first board to the queue
+        //queue.add(board);         // adds first board to the queue
 
         //System.out.println("The TEST board below is to test the score calculation:");
         //board.addTestBoard();     // adds the pieces in a specific way (to test score function)
@@ -40,8 +40,10 @@ public class Main {
         */
 
         //main game play loop
-        while(true) {
+        while(board.gameIsNotFinished()) {
             board = userMove();
+            delay(1000);
+            wipeScreen();
             board.printBoard();
 
             // add cpu moves here
@@ -50,30 +52,25 @@ public class Main {
             Board bestBoard = board;
             for (int j = 0; j < new_children.size(); j++) {
                 Board current_board = new_children.get(j);
-                current_board.printBoard();
+                //current_board.printBoard();
                 int whiteScore = current_board.calculateScoreForOnePlayer(pieceAmount, true, current_board);
                 int blackScore = current_board.calculateScoreForOnePlayer(pieceAmount, false, current_board);
-                System.out.println("The score for black/up (false) is: " + blackScore);
-                System.out.println("The score for white/down (true) is: " + whiteScore);
+                //System.out.println("The score for black/up (false) is: " + blackScore);
+                //System.out.println("The score for white/down (true) is: " + whiteScore);
                 int scoreDifference = blackScore-whiteScore;
-                System.out.println("The score difference is: " + scoreDifference);
+                //System.out.println("The score difference is: " + scoreDifference);
 
                 if(scoreDifference > greatestDifference) {
                     greatestDifference = scoreDifference;
                     board = current_board;
                 }
             }
+
+            delay(1500);
+            wipeScreen();
+            board.printBoard();
         }
-
-
-        // step 1: let user (white) do a move (only if move if valid)
-        // step 2: copy board, do move and print board
-        // step 3: calculate all possible moves from that situation 2 iterations deep
-        // so 1st move for black (cpu), 1 mpve for white (user), 2nd move black, 2nd move white
-        // step 4: at the final level, calculate all black and white scores for all boards
-        // step 5: substract white score from black score and choose board with highest difference
-        // step 6: choose the board leading to that state (so follow that path)
-        // step 7: repeat!
+        System.out.println(board.getWinner());
 
         /*
         ArrayList<Board> new_children = board.checkMovesForAll(false, board);
@@ -100,122 +97,6 @@ public class Main {
         System.out.println("The best move is:");
         bestBoard.printBoard();
         */
-
-        /*
-        // get first board
-        Board first_board = queue.getFirst();
-
-        // calculate all moves for black
-        ArrayList<Board> black1_new_children = first_board.checkMovesForAll(false, first_board);
-        queue.addAll(black1_new_children);
-
-        //for(int i = 0; i < queue.size(); i++) {
-        //    queue.get(i).printBoard();
-        //}
-
-        // remove first element from grid
-        queue.removeFirst();
-
-        int currentQueueSize = queue.size();
-        for(int i = 0; i < currentQueueSize; i++) {
-            Board current_board = queue.get(i);
-
-            // calculate all moves for white
-            ArrayList<Board> white_new_children = current_board.checkMovesForAll(true, current_board);
-            queue.addAll(white_new_children);
-
-            // remove first element from grid
-            queue.remove(i);
-        }
-
-        int newCurrentQueueSize = queue.size();
-        for(int i = 0; i < newCurrentQueueSize; i++) {
-            Board current_board = queue.get(i);
-
-            // calculate all moves for black
-            ArrayList<Board> black2_new_children = current_board.checkMovesForAll(false, current_board);
-            queue.addAll(black2_new_children);
-
-            // remove first element from grid
-            queue.remove(i);
-        }
-
-        for(int i = 0; i < queue.size(); i++) {
-            queue.get(i).printBoard();
-        }
-        */
-
-
-        //ArrayList<Board> white_new_children;
-        //for(int i = 0; i < queue.size(); i++) {
-        //    Board sub_board = queue.get(i);
-        //   ArrayList<Board> sub_children = sub_board.checkMovesForAll(true, sub_board);
-        //    queue.addAll(sub_children);
-        //}
-
-        //for(int i = 0; i < queue.size(); i++) {
-        //    queue.get(i).printBoard();
-        //}
-
-
-        /*
-        for(int i = 0; i < 3; i++) {
-            System.out.println("i is" + i);
-
-            // retrieve first element and generate all children
-            Board first_board = queue.getFirst();
-            ArrayList<Board> new_children = first_board.checkMovesForAll(false, first_board);
-            for (int j = 0; j < new_children.size(); j++) {
-                System.out.println("j is" + j);
-                Board child = new_children.get(j);
-                child.printBoard();
-                queue.add(child);
-            }
-
-            // remove first element from grid
-            queue.removeFirst();
-        }
-
-        queue.getLast().printBoard();
-        */
-
-
-/*
-        ArrayList<Board> list = board.checkMovesForPawn(true, 6, 0, board);
-
-        for(int i = 0; i < list.size(); i++) {
-            list.get(i).printBoard();
-        }
-
-        ArrayList<Board> list2 = board.checkMovesForRook(false, 0,0, board);
-
-        for(int i = 0; i < list2.size(); i++) {
-            list2.get(i).printBoard();
-        }
-
-        ArrayList<Board> list3 = board.checkMovesForKing(true, 7,4, board);
-
-        for(int i = 0; i < list3.size(); i++) {
-            list3.get(i).printBoard();
-        }
-*/
-
-
-        /*
-        ArrayList<Board> list4 = board.checkMovesForAll(false, board);
-
-        for (Board aList4 : list4) {
-            aList4.printBoard();
-        }
-
-
-        Board board2 = new Board(list4.get(4)) ;
-        ArrayList<Board> list5 = board2.checkMovesForAll(true, board2);
-
-        for (Board aList5 : list5) {
-            aList5.printBoard();
-        }
-        */
     }
 
     public static Board userMove() {
@@ -241,7 +122,7 @@ public class Main {
 
     // wipe the screen
     private static void wipeScreen() {
-        for(int i = 0; i < 10; i++) {
+        for(int i = 0; i < 50; i++) {
             System.out.println();
         }
     }
