@@ -159,10 +159,12 @@ public class Board {
                     node = minilist.get(i);
                     Board board2 = node.getLeafBoard();
 
+
                     Piece piece1 = board1.board[x2][y2];
                     Piece piece2 = board2.board[x2][y2];
 
-                    if (piece1 != null && piece2 != null && piece2.toString().equals(piece1.toString())) return true;
+                    if (piece1 != null && piece2 != null && piece1.getValue() == piece2.getValue()
+                            && piece1.getColor() == piece2.getColor()) return true;
 
                 }
             }
@@ -204,6 +206,7 @@ public class Board {
             x1 = x-1;
             y1 = y;
             if (x1 >= 0 && board[y1][x1] == null) {
+                System.out.println("x: " + x1 + ", y: " + y1);
                 tempBoard = pieceMoves(color, x, y, x1, y1, value, input_board);
                 tempNode = new Node(input_board, tempBoard);
                 list.add(tempNode);
@@ -211,6 +214,7 @@ public class Board {
 
             x1 = x-2;
             if(x == 6 && board[y1][x-1] == null && board[y][x1] == null) {
+                System.out.println("x: " + x1 + ", y: " + y1);
                 tempBoard = pieceMoves(color, x, y, x1, y1, value, input_board);
                 tempNode = new Node(input_board, tempBoard);
                 list.add(tempNode);
@@ -219,6 +223,7 @@ public class Board {
             x1 = x-1;
             y1 = y-1;
             if(x1 >= 0 && y1 >= 0 && board[y1][x1] != null && !board[y1][x1].getColor()) {
+                System.out.println("x: " + x1 + ", y: " + y1);
                 tempBoard = pieceMoves(color, x, y, x1, y1, value, input_board);
                 tempNode = new Node(input_board, tempBoard);
                 list.add(tempNode);
@@ -227,6 +232,7 @@ public class Board {
 
             y1 = y+1;
             if(x1 >= 0 && y1 >= 0 && board[y1][x1] != null && !board[y1][x1].getColor()) {
+                System.out.println("x: " + x1 + ", y: " + y1);
                 tempBoard = pieceMoves(color, x, y, x1, y1, value, input_board);
                 tempNode = new Node(input_board, tempBoard);
                 list.add(tempNode);
