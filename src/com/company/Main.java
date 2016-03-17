@@ -6,57 +6,78 @@ import java.util.Scanner;
 
 public class Main {
 
-    // chess board is always 8x8 fields
-    private static int BOARD_SIZE = 8;
+    private static int BOARD_SIZE = 8;                  // size of a chess board
+    private static final int AMOUNT_OF_PIECES = 22;     // 8x2 pawns, 2x2 rooks, 1x2 kings
 
-    // simple chess has 32 pieces (8x2 pawns, 2x2 rooks, 1x2 kings)
-    private static final int AMOUNT_OF_PIECES = 22;
-
-    // declare new object from class Board
+    // declare new object from the Board class
     private static Board board = new Board(BOARD_SIZE, AMOUNT_OF_PIECES);
 
-    // linked list
+    // declare new LinkedList to keep track of all board configurations
     private static LinkedList<Board> queue = new LinkedList<>();
 
+
     public static void main(String[] args) {
-        board.addPieces();
+        board.addPieces();          // adds the pieces to the board
+        queue.add(board);           // adds first board to the queue
+
+        //System.out.println("The TEST board below is to test the score calculation:");
+        //board.addTestBoard();     // adds the pieces in a specific way (to test score function)
+
+        board.printBoard();         // prints the board
+
+        // pieceAmount is used to know whether the game status is begingame, midgame or endgame
+        int pieceAmount = AMOUNT_OF_PIECES;
+
         /*
-        System.out.println("The TEST board below is to test the score calculation:");
-        board.addTestBoard();   // test board
-        */
-        //wipeScreen();
-        board.printBoard();
-        //delay(2000);
-
-
-        // add first grid to queue
-        queue.add(board);
-
-        while(true) {
-            board = userMove();
-            board.printBoard();
-
-            // add cpu moves here
-        }
-
-
-
-
-
-
-/*
-        int pieceAmount = AMOUNT_OF_PIECES; // used to know whether status is begingame, midgame or endgame
-
-        // CALCULATING SCORE AI ALGORITHM: (parameters are pieceAmount, player color and board)
+        // CALCULATING SCORE AI ALGORITHM SCORE TESTING
+        // parameters are int pieceAmount, boolean color and Board board)
         int whiteScore = board.calculateScoreForOnePlayer(pieceAmount, true, board);
         int blackScore = board.calculateScoreForOnePlayer(pieceAmount, false, board);
-
         System.out.println("The score for black/up (false) is: " + blackScore);
         System.out.println("The score for white/down (true) is: " + whiteScore);
-*/
+        */
+
+        // main game play loop
+        //while(true) {
+        //    board = userMove();
+        //    board.printBoard();
+        //
+            // add cpu moves here
+        //}
 
 
+        // step 1: let user (white) do a move (only if move if valid)
+        // step 2: copy board, do move and print board
+        // step 3: calculate all possible moves from that situation 2 iterations deep
+        // so 1st move for black (cpu), 1 mpve for white (user), 2nd move black, 2nd move white
+        // step 4: at the final level, calculate all black and white scores for all boards
+        // step 5: substract white score from black score and choose board with highest difference
+        // step 6: choose the board leading to that state (so follow that path)
+        // step 7: repeat!
 
+        ArrayList<Board> new_children = board.checkMovesForAll(false, board);
+        int greatestDifference = 0;
+        Board bestBoard = board;
+        for (int j = 0; j < new_children.size(); j++) {
+            Board child = new_children.get(j);
+            child.printBoard();
+            int whiteScore = child.calculateScoreForOnePlayer(pieceAmount, true, child);
+            int blackScore = child.calculateScoreForOnePlayer(pieceAmount, false, child);
+            System.out.println("The score for black/up (false) is: " + blackScore);
+            System.out.println("The score for white/down (true) is: " + whiteScore);
+            int scoreDifference = blackScore-whiteScore;
+            System.out.println("The score difference is: " + scoreDifference);
+
+            if(scoreDifference > greatestDifference) {
+                greatestDifference = scoreDifference;
+                bestBoard = child;
+            }
+
+        }
+
+        System.out.println("The greatest difference is: " + greatestDifference);
+        System.out.println("The best move is:");
+        bestBoard.printBoard();
 
 
 
@@ -140,7 +161,6 @@ public class Main {
 
         return board.pieceMoves(true, startY, startX, endY, endX, board.getValue(startY, startX), board);
     }
-
 
     // wipe the screen
     private static void wipeScreen() {
