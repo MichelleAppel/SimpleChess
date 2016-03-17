@@ -461,7 +461,7 @@ public class Board {
     }
 
     public ArrayList checkMovesForAll(boolean color, Board input_board) {
-        ArrayList list =  new ArrayList<>();
+        ArrayList<Node> list =  new ArrayList<Node>();
         for(int y = 0; y < 8; y++) {
             for(int x = 0; x < 8; x++) {
                     System.out.println("y is" + y);
@@ -469,7 +469,7 @@ public class Board {
 
                 Piece piece = board[y][x];
                 if(piece != null) {
-                    ArrayList minilist =  new ArrayList<>();
+                    ArrayList<Node> minilist =  new ArrayList<Node>();
 
                     int getValue = piece.getValue();
                     boolean getColor = piece.getColor();
@@ -486,7 +486,7 @@ public class Board {
                             minilist = checkMovesForKing(color, x, y, input_board);
                         }
                     }
-                    for (Object aMinilist : minilist) {
+                    for (Node aMinilist : minilist) {
                         list.add(aMinilist);
                     }
                 }
