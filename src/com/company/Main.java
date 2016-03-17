@@ -9,7 +9,6 @@ public class Main {
     private static int BOARD_SIZE = 8;                  // size of a chess board
     private static final int AMOUNT_OF_PIECES = 22;     // 8x2 pawns, 2x2 rooks, 1x2 kings
 
-    private static Node node;
 
     // declare new object from the Board class
     private static Board board = new Board(BOARD_SIZE, AMOUNT_OF_PIECES);
@@ -46,12 +45,11 @@ public class Main {
             board.printBoard();
 
             // add cpu moves here
-            ArrayList<Node> new_children = board.checkMovesForAll(false, board);
+            ArrayList<Board> new_children = board.checkMovesForAll(false, board);
             int greatestDifference = 0;
             Board bestBoard = board;
             for (int j = 0; j < new_children.size(); j++) {
-                node = new_children.get(j);
-                Board current_board = node.getLeafBoard();
+                Board current_board = new_children.get(j);
                 current_board.printBoard();
                 int whiteScore = current_board.calculateScoreForOnePlayer(pieceAmount, true, current_board);
                 int blackScore = current_board.calculateScoreForOnePlayer(pieceAmount, false, current_board);
@@ -358,7 +356,7 @@ public class Main {
         }
 
         if(layerDeepnessOfMoves == 1) {
-            ArrayList<Node> new_children = input_board.checkMovesForAll(false, input_board);
+            ArrayList<Board> new_children = input_board.checkMovesForAll(false, input_board);
             // en dan score berekenen en het board met de beste score kiezen
 
 
@@ -367,8 +365,8 @@ public class Main {
             }
 
             for(int k = 0; k < new_children.size(); k++) {
-                node = new_children.get(k);
-                Board current_board = node.getLeafBoard();
+                Board current_board = new_children.get(k);
+
                 System.out.println("test");
                 current_board.printBoard();
             }

@@ -422,7 +422,7 @@ public class Board {
         }
         return list;
     }
-    
+
     /* *******************************
      * 5. Methods for Counting Score *
      ******************************* */
