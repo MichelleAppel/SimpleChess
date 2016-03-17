@@ -1,8 +1,6 @@
 package com.company;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
 
@@ -46,21 +44,57 @@ public class Main {
             wipeScreen();
             board.printBoard();
 
+
+            ArrayList<Node> nodes = new ArrayList<>();
+            nodes.add(new Node(null, board, null));
+
             // add cpu moves here
             ArrayList<Board> new_children = board.checkMovesForAll(false, board);
+
+
+            nodes = generateNextLayer(nodes, false);
+            nodes = generateNextLayer(nodes, true);
+            nodes = generateNextLayer(nodes, false);
+
+            for(Node node: nodes) {
+                Board board = node.getLeafBoard();
+                int whiteScore = board.calculateScoreForOnePlayer(pieceAmount, true, board);
+                int blackScore = board.calculateScoreForOnePlayer(pieceAmount, false, board);
+                int scoreDifference = whiteScore - blackScore;
+                node.setScore(scoreDifference);
+            }
+
+            HashSet<Node> parentNodes = new HashSet<>();
+
+            for(Node node: nodes) {
+                parentNodes.add(node.getParent());
+                Integer score = node.getParent().getScore();
+                if(score == null) {
+                    node.getParent().setScore(node.getScore());
+                }   // else if() {
+                    // blackScore < parent Node score -> vervangen;
+                //} else if() {
+                    // whiteScore > parent Node score -> vervangen;
+
+                //}
+            }
+
+
+            System.out.println(parentNodes.size());
+
+            /*
             int greatestDifference = 0;
             Board bestBoard = board;
-            for (int j = 0; j < new_children.size(); j++) {
-                Board current_board = new_children.get(j);
+            for (Board current_board : new_children) {
                 //current_board.printBoard();
                 int whiteScore = current_board.calculateScoreForOnePlayer(pieceAmount, true, current_board);
                 int blackScore = current_board.calculateScoreForOnePlayer(pieceAmount, false, current_board);
                 //System.out.println("The score for black/up (false) is: " + blackScore);
                 //System.out.println("The score for white/down (true) is: " + whiteScore);
-                int scoreDifference = blackScore-whiteScore;
+                int scoreDifference = blackScore - whiteScore;
                 //System.out.println("The score difference is: " + scoreDifference);
 
-                if(scoreDifference > greatestDifference) {
+                if (scoreDifference > greatestDifference) {
                     greatestDifference = scoreDifference;
                     board = current_board;
                 }
@@ -69,6 +103,7 @@ public class Main {
             delay(1500);
             wipeScreen();
             board.printBoard();
+            */
         }
         System.out.println(board.getWinner());
 
@@ -98,6 +133,20 @@ public class Main {
         bestBoard.printBoard();
         */
     }
+
+    public static ArrayList<Node> generateNextLayer(Iterable<Node> nodes, boolean color) {
+        ArrayList<Node> children = new ArrayList<>();
+
+        for (Node node: nodes) {
+            Board current_board = node.getLeafBoard();
+            List<Board> boards = current_board.checkMovesForAll(color, current_board);
+            for( Board board: boards) {
+                children.add(new Node(node, board, null));
+            }
+        }
+        return children;
+    }
+
 
     public static Board userMove() {
         int[] coordinates = getUserInput();

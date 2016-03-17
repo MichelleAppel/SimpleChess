@@ -1,20 +1,30 @@
 package com.company;
 
 public class Node {
-    private static Board rootBoard;
-    private static Board leafBoard;
+    private Node parent;
+    private Board leafBoard;
+    private Integer score;
 
-    public Node(Board rootBoard, Board leafBoard) {
-        this.rootBoard = rootBoard;
+    public Node(Node parent, Board leafBoard, Integer score) {
+        this.parent = parent;
         this.leafBoard = leafBoard;
+        this.score = score;
     }
 
-    public static Board getRootBoard() {
-        return rootBoard;
+    public Node getParent() {
+        return parent;
     }
 
-    public static Board getLeafBoard() {
+    public Board getLeafBoard() {
         return leafBoard;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public int getScore() {
+        return score;
     }
 
 }
