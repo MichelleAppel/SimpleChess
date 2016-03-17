@@ -37,13 +37,13 @@ public class Main {
         System.out.println("The score for white/down (true) is: " + whiteScore);
         */
 
-        // main game play loop
-        //while(true) {
-        //    board = userMove();
-        //    board.printBoard();
-        //
+        //main game play loop
+        while(true) {
+            board = userMove();
+            board.printBoard();
+
             // add cpu moves here
-        //}
+        }
 
 
         // step 1: let user (white) do a move (only if move if valid)
@@ -55,6 +55,7 @@ public class Main {
         // step 6: choose the board leading to that state (so follow that path)
         // step 7: repeat!
 
+        /*
         ArrayList<Board> new_children = board.checkMovesForAll(false, board);
         int greatestDifference = 0;
         Board bestBoard = board;
@@ -80,7 +81,7 @@ public class Main {
         bestBoard.printBoard();
 
 
-
+*/
 
 /*
         for(int i = 0; i < 3; i++) {

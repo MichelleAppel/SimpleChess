@@ -255,7 +255,7 @@ public class Board {
             }
 
             y1 = y+1;
-            if(x1 >= 0 && y1 >= 0 && board[y1][x1] != null && board[y1][x1].getColor()) {
+            if(x1 >= 0 && x1 < 8 && y1 < 8 && board[y1][x1] != null && board[y1][x1].getColor()) {
                 tempBoard = pieceMoves(color, x, y, x1, y1, value, input_board);
                 tempNode = new Node(input_board, tempBoard);
                 list.add(tempNode);
@@ -831,12 +831,17 @@ public class Board {
         for (int i = 0; i < size; i++){
             System.out.print((8-i) + "  ");
             for (int j = 0; j < size; j++){
-                System.out.print((board[j][i] == null? ".": board[j][i]) + " ");
+                if(board[j][i] != null && board[j][i].getColor()) {
+                    System.out.print(" W" + board[j][i].getValue());
+                } else if(board[j][i] != null && !board[j][i].getColor()) {
+                    System.out.print(" B" + board[j][i].getValue());
+                } else {
+                    System.out.print(" . ");
+                }
             }
             System.out.println();
-
         }
-        System.out.println("   a b c d e f g h");
+        System.out.println("    a  b  c  d  e  f  g  h");
         System.out.println("");
     }
 }
