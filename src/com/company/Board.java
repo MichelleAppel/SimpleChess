@@ -57,7 +57,7 @@ public class Board {
 
     // adds all pieces (objects) to board the board (matrix)
     public void addPieces() {
-        addPawns();
+        //addPawns();
         addRooks();
         addKings();
     }
