@@ -4,11 +4,13 @@ public class Node {
     private Node parent;
     private Board leafBoard;
     private Integer score;
+    private boolean color;
 
-    public Node(Node parent, Board leafBoard, Integer score) {
+    public Node(Node parent, Board leafBoard, Integer score, boolean color) {
         this.parent = parent;
         this.leafBoard = leafBoard;
         this.score = score;
+        this.color = color;
     }
 
     public Node getParent() {
@@ -23,8 +25,14 @@ public class Node {
         this.score = score;
     }
 
+    public boolean getColor() { return color;}
+
     public int getScore() {
-        return score;
+        if(score != null) {
+            return score;
+        } else {
+            return 0;
+        }
     }
 
 }

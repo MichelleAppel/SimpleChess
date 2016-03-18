@@ -38,7 +38,7 @@ public class Main {
         */
 
         //main game play loop
-        while(board.gameIsNotFinished()) {
+        while (board.gameIsNotFinished()) {
             board = userMove();
             delay(1000);
             wipeScreen();
@@ -46,7 +46,7 @@ public class Main {
 
 
             ArrayList<Node> nodes = new ArrayList<>();
-            nodes.add(new Node(null, board, null));
+            nodes.add(new Node(null, board, null, true));
 
             // add cpu moves here
             ArrayList<Board> new_children = board.checkMovesForAll(false, board);
@@ -56,7 +56,7 @@ public class Main {
             nodes = generateNextLayer(nodes, true);
             nodes = generateNextLayer(nodes, false);
 
-            for(Node node: nodes) {
+            for (Node node : nodes) {
                 Board board = node.getLeafBoard();
                 int whiteScore = board.calculateScoreForOnePlayer(pieceAmount, true, board);
                 int blackScore = board.calculateScoreForOnePlayer(pieceAmount, false, board);
@@ -66,21 +66,22 @@ public class Main {
 
             HashSet<Node> parentNodes = new HashSet<>();
 
-            for(Node node: nodes) {
+            for (Node node : nodes) {
                 parentNodes.add(node.getParent());
                 Integer score = node.getParent().getScore();
-                if(score == null) {
+                if (score == null) {
                     node.getParent().setScore(node.getScore());
-                }   // else if() {
-                    // blackScore < parent Node score -> vervangen;
-                //} else if() {
+                    } else if(!node.getColor() && node.getScore() < score) {
+                    //blackScore < parent Node score -> vervangen;
+                    node.getParent().setScore(score);
+                    } else if(node.getColor() && node.getScore() > score) {
                     // whiteScore > parent Node score -> vervangen;
+                    node.getParent().setScore(score);
+                    }
+                }
 
-                //}
-            }
 
-
-            System.out.println(parentNodes.size());
+                System.out.println(parentNodes.size());
 
             /*
             int greatestDifference = 0;
@@ -104,8 +105,8 @@ public class Main {
             wipeScreen();
             board.printBoard();
             */
-        }
-        System.out.println(board.getWinner());
+            }
+            System.out.println(board.getWinner());
 
         /*
         ArrayList<Board> new_children = board.checkMovesForAll(false, board);
@@ -132,20 +133,23 @@ public class Main {
         System.out.println("The best move is:");
         bestBoard.printBoard();
         */
-    }
-
-    public static ArrayList<Node> generateNextLayer(Iterable<Node> nodes, boolean color) {
-        ArrayList<Node> children = new ArrayList<>();
-
-        for (Node node: nodes) {
-            Board current_board = node.getLeafBoard();
-            List<Board> boards = current_board.checkMovesForAll(color, current_board);
-            for( Board board: boards) {
-                children.add(new Node(node, board, null));
-            }
         }
-        return children;
-    }
+
+
+
+
+        private static ArrayList<Node> generateNextLayer(Iterable<Node> nodes, boolean color) {
+            ArrayList<Node> children = new ArrayList<>();
+
+            for (Node node: nodes) {
+                Board current_board = node.getLeafBoard();
+                List<Board> boards = current_board.checkMovesForAll(color, current_board);
+                for( Board board: boards) {
+                    children.add(new Node(node, board, null, color));
+                }
+            }
+            return children;
+        }
 
 
     public static Board userMove() {

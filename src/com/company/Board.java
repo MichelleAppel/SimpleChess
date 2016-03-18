@@ -1,6 +1,6 @@
 package com.company;
 
-import com.apple.eawt.AppEvent;
+
 
 import java.util.ArrayList;
 
@@ -658,9 +658,9 @@ public class Board {
                 Piece otherPiece = board[y + 1][x + 1];
                 if (otherPiece != null) {
                     if (piece.getColor() == color) {
-                        score += 1*king_factor_weight;
+                        score += king_factor_weight;
                     } else {
-                        score -= 1*king_factor_weight;
+                        score -= king_factor_weight;
                     }
                 }
             }
@@ -669,9 +669,9 @@ public class Board {
                 Piece otherPiece = board[y + 1][x];
                 if (otherPiece != null) {
                     if (piece.getColor() == color) {
-                        score += 1*king_factor_weight;
+                        score += king_factor_weight;
                     } else {
-                        score -= 1*king_factor_weight;
+                        score -= king_factor_weight;
                     }
                 }
             }
@@ -691,9 +691,9 @@ public class Board {
                 Piece otherPiece = board[y][x + 1];
                 if (otherPiece != null) {
                     if (piece.getColor() == color) {
-                        score += 1*king_factor_weight;
+                        score += king_factor_weight;
                     } else {
-                        score -= 1*king_factor_weight;
+                        score -= king_factor_weight;
                     }
                 }
             }
@@ -703,9 +703,9 @@ public class Board {
                 Piece otherPiece = board[y][x - 1];
                 if (otherPiece != null) {
                     if (piece.getColor() == color) {
-                        score += 1*king_factor_weight;
+                        score += king_factor_weight;
                     } else {
-                        score -= 1*king_factor_weight;
+                        score -= king_factor_weight;
                     }
                 }
             }
@@ -725,9 +725,9 @@ public class Board {
                 Piece otherPiece = board[y - 1][x];
                 if (otherPiece != null) {
                     if (piece.getColor() == color) {
-                        score += 1*king_factor_weight;
+                        score += king_factor_weight;
                     } else {
-                        score -= 1*king_factor_weight;
+                        score -= king_factor_weight;
                     }
                 }
             }
@@ -736,9 +736,9 @@ public class Board {
                 Piece otherPiece = board[y - 1][x - 1];
                 if (otherPiece != null) {
                     if (piece.getColor() == color) {
-                        score += 1*king_factor_weight;
+                        score += king_factor_weight;
                     } else {
-                        score -= 1*king_factor_weight;
+                        score -= king_factor_weight;
                     }
                 }
             }
