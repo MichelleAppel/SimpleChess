@@ -27,12 +27,6 @@ public class Node {
 
     public boolean getColor() { return color;}
 
-    public int getScore() {
-        if(score != null) {
-            return score;
-        } else {
-            return 0;
-        }
-    }
+    public Integer getScore() { return score; }
 
 }

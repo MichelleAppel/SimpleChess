@@ -96,8 +96,8 @@ public class Main {
                     node.getParent().setScore(childScore);
                 }
 
-                System.out.println("child" + node.getScore());
-                System.out.println("parent" + node.getParent().getScore());
+                //System.out.println("child" + node.getScore());
+                //System.out.println("parent" + node.getParent().getScore());
                 grandparentNodes.add(node.getParent());
 
             }
@@ -137,12 +137,10 @@ public class Main {
                 if(bestScore == null) {
                     bestScore = node.getScore();
                 } else if (!node.getColor() && node.getScore() < bestScore) {
-                    System.out.println("test1");
 
                     bestScore = node.getScore();
                     bestBoard = node.getLeafBoard();
                 } else if (node.getColor() && node.getScore() > bestScore) {
-                    System.out.println("test2");
 
                     bestScore = node.getScore();
                     bestBoard = node.getLeafBoard();
