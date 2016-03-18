@@ -13,38 +13,38 @@ public class Main {
     // declare new object from the Board class
     private static Board board = new Board(BOARD_SIZE, AMOUNT_OF_PIECES);
 
-
     public static void main(String[] args) {
+        welcomeScreen();
+        board.addPieces();
+        board.printBoard();
 
-        //welcomeScreen();
-
-        board.addPieces();          // adds the pieces to the board
-        board.printBoard();       // prints the board
-
-        // pieceAmount is used to know whether the game status is begingame, midgame or endgame
         int pieceAmount = AMOUNT_OF_PIECES;
 
-
-        //main game play loop
+        // main game play loop
         while (board.gameIsNotFinished()) {
+            // user move
             board = userMove();
-            delay(1000);
+            delay(500);
             wipeScreen();
             board.printBoard();
 
             if(!board.gameIsNotFinished()) break;
 
+            // computer move
             board = computerMove(pieceAmount);
-            delay(500);
             wipeScreen();
             board.printBoard();
-
         }
 
         System.out.println(board.getWinner());
-
     }
 
+    /* Generates the move for the computer, based on MiniMax algorithm.
+     * The program looks 4 layers deep, calculates the best score,
+     * passes it to it's parent until the root is reached.
+     * Then it knows which path i.e. move to take.
+     * More info in our report!
+     */
     public static Board computerMove(int pieceAmount) {
         ArrayList<Node> nodes = new ArrayList<>();
         nodes.add(new Node(null, board, null, true));
@@ -52,6 +52,7 @@ public class Main {
         nodes = generateNextLayer(nodes, false);
         nodes = generateNextLayer(nodes, true);
         nodes = generateNextLayer(nodes, false);
+        nodes = generateNextLayer(nodes, true);
 
         for (Node node : nodes) {
             Board board = node.getLeafBoard();
@@ -105,9 +106,32 @@ public class Main {
 
         }
 
+
+        HashSet<Node> grandgrandparentNodes = new HashSet<>();
+
+        for (Node node : grandparentNodes) {
+            Integer childScore = node.getScore();
+            Integer parentScore = node.getParent().getScore();
+
+            if (parentScore == null) {
+                node.getParent().setScore(childScore);
+
+            } else if (!node.getColor() && childScore < parentScore) {
+                //blackScore < parent Node score -> vervangen;
+                node.getParent().setScore(childScore);
+
+            } else if (node.getColor() && childScore > parentScore) {
+                // whiteScore > parent Node score -> vervangen;
+                node.getParent().setScore(childScore);
+            }
+
+            grandgrandparentNodes.add(node.getParent());
+
+        }
+
         Integer bestScore = null;
         Board bestBoard = null;
-        for (Node node : grandparentNodes) {
+        for (Node node : grandgrandparentNodes) {
             if (bestScore == null) {
                 bestScore = node.getScore();
                 bestBoard = node.getLeafBoard();
@@ -138,7 +162,7 @@ public class Main {
         return children;
     }
 
-
+    // move based on user input, returns the board (only if valid)
     public static Board userMove() {
         int[] coordinates = getUserInput();
 
@@ -176,13 +200,11 @@ public class Main {
         }
     }
 
+    /* Getting user input, using a scanner.
+     * Also validating the input, so a wrong input doesn't work. */
     private static int[] getUserInput() {
         Scanner input = new Scanner(System.in);
-
-        //System.out.println("Please enter the start and end position of the piece you want to move.");
-        //System.out.println("Please use capital letters and no spaces, like this: D2D4");
         String input_string = input.next(); // getting a String value
-        //System.out.println(input_string);
 
         int startX = -1;
         int startY = -1;
@@ -257,7 +279,7 @@ public class Main {
         return coordinates;
     }
 
-
+    // information for the user about the game
     public static void welcomeScreen() {
         wipeScreen();
         System.out.println("Hello! Welcome to our Simple Chess game.");
@@ -281,5 +303,4 @@ public class Main {
         delay(2500);
         wipeScreen();
     }
-
 }
