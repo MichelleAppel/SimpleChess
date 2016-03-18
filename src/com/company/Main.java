@@ -13,28 +13,16 @@ public class Main {
     // declare new object from the Board class
     private static Board board = new Board(BOARD_SIZE, AMOUNT_OF_PIECES);
 
-    // declare new LinkedList to keep track of all board configurations
-    //private static LinkedList<Board> queue = new LinkedList<>();
-
 
     public static void main(String[] args) {
         board.addPieces();          // adds the pieces to the board
         board.printBoard();       // prints the board
 
-        //queue.add(board);         // adds first board to the queue
-
         // pieceAmount is used to know whether the game status is begingame, midgame or endgame
         int pieceAmount = AMOUNT_OF_PIECES;
 
-        /*
-        // CALCULATING SCORE AI ALGORITHM SCORE TESTING
-        // parameters are int pieceAmount, boolean color and Board board)
-        int whiteScore = board.calculateScoreForOnePlayer(pieceAmount, true, board);
-        int blackScore = board.calculateScoreForOnePlayer(pieceAmount, false, board);
-        System.out.println("The score for black/up (false) is: " + blackScore);
-        System.out.println("The score for white/down (true) is: " + whiteScore);
-        */
         //welcomeScreen();
+
         //main game play loop
         while (board.gameIsNotFinished()) {
             board = userMove();
@@ -42,6 +30,9 @@ public class Main {
             wipeScreen();
             board.printBoard();
 
+            //computerMove();
+            //wipeScreen();
+            //board.printBoard();
 
             ArrayList<Node> nodes = new ArrayList<>();
             nodes.add(new Node(null, board, null, true));
@@ -108,7 +99,7 @@ public class Main {
                 System.out.println("child" + node.getScore());
                 System.out.println("parent" + node.getParent().getScore());
                 grandparentNodes.add(node.getParent());
-                
+
             }
             /*
             for (Node node : parentNodes) {
@@ -193,18 +184,18 @@ public class Main {
 
 
 
-        private static ArrayList<Node> generateNextLayer(Iterable<Node> nodes, boolean color) {
-            ArrayList<Node> children = new ArrayList<>();
+    private static ArrayList<Node> generateNextLayer(Iterable<Node> nodes, boolean color) {
+        ArrayList<Node> children = new ArrayList<>();
 
-            for (Node node: nodes) {
-                Board current_board = node.getLeafBoard();
-                List<Board> boards = current_board.checkMovesForAll(color, current_board);
-                for( Board board: boards) {
-                    children.add(new Node(node, board, null, color));
-                }
+        for (Node node: nodes) {
+            Board current_board = node.getLeafBoard();
+            List<Board> boards = current_board.checkMovesForAll(color, current_board);
+            for( Board board: boards) {
+                children.add(new Node(node, board, null, color));
             }
-            return children;
         }
+        return children;
+    }
 
 
     public static Board userMove() {
