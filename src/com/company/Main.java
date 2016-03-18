@@ -1,12 +1,14 @@
 package com.company;
 
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Scanner;
 
 public class Main {
 
     private static int BOARD_SIZE = 8;                  // size of a chess board
     private static final int AMOUNT_OF_PIECES = 22;     // 8x2 pawns, 2x2 rooks, 1x2 kings
-
 
     // declare new object from the Board class
     private static Board board = new Board(BOARD_SIZE, AMOUNT_OF_PIECES);
@@ -17,17 +19,13 @@ public class Main {
 
     public static void main(String[] args) {
         board.addPieces();          // adds the pieces to the board
+        board.printBoard();       // prints the board
+
         //queue.add(board);         // adds first board to the queue
-
-        //System.out.println("The TEST board below is to test the score calculation:");
-        //board.addTestBoard();     // adds the pieces in a specific way (to test score function)
-
-        board.printBoard();         // prints the board
 
         // pieceAmount is used to know whether the game status is begingame, midgame or endgame
         int pieceAmount = AMOUNT_OF_PIECES;
 
-        //calculateBestMoveForCPU(board, 22);
         /*
         // CALCULATING SCORE AI ALGORITHM SCORE TESTING
         // parameters are int pieceAmount, boolean color and Board board)
@@ -36,7 +34,7 @@ public class Main {
         System.out.println("The score for black/up (false) is: " + blackScore);
         System.out.println("The score for white/down (true) is: " + whiteScore);
         */
-
+        //welcomeScreen();
         //main game play loop
         while (board.gameIsNotFinished()) {
             board = userMove();
@@ -51,7 +49,6 @@ public class Main {
             // add cpu moves here
             ArrayList<Board> new_children = board.checkMovesForAll(false, board);
 
-
             nodes = generateNextLayer(nodes, false);
             nodes = generateNextLayer(nodes, true);
             nodes = generateNextLayer(nodes, false);
@@ -60,30 +57,116 @@ public class Main {
                 Board board = node.getLeafBoard();
                 int whiteScore = board.calculateScoreForOnePlayer(pieceAmount, true, board);
                 int blackScore = board.calculateScoreForOnePlayer(pieceAmount, false, board);
+
                 int scoreDifference = whiteScore - blackScore;
                 node.setScore(scoreDifference);
+                //System.out.println(node.getScore());
             }
 
             HashSet<Node> parentNodes = new HashSet<>();
 
             for (Node node : nodes) {
-                parentNodes.add(node.getParent());
-                Integer score = node.getParent().getScore();
-                if (score == null) {
-                    node.getParent().setScore(node.getScore());
-                    } else if(!node.getColor() && node.getScore() < score) {
+                Integer childScore = node.getScore();
+                Integer parentScore = node.getParent().getScore();
+
+                if (parentScore == null) {
+                    node.getParent().setScore(childScore);
+
+                } else if (!node.getColor() && childScore < parentScore) {
                     //blackScore < parent Node score -> vervangen;
-                    node.getParent().setScore(score);
-                    } else if(node.getColor() && node.getScore() > score) {
+                    node.getParent().setScore(childScore);
+
+                } else if (node.getColor() && childScore > parentScore) {
                     // whiteScore > parent Node score -> vervangen;
-                    node.getParent().setScore(score);
-                    }
+                    node.getParent().setScore(childScore);
                 }
 
+                //System.out.println("child" + node.getScore());
+                //System.out.println("parent" + node.getParent().getScore());
+                parentNodes.add(node.getParent());
 
-                System.out.println(parentNodes.size());
+            }
 
+            HashSet<Node> grandparentNodes = new HashSet<>();
+
+            for (Node node : parentNodes) {
+                Integer childScore = node.getScore();
+                Integer parentScore = node.getParent().getScore();
+
+                if (parentScore == null) {
+                    node.getParent().setScore(childScore);
+
+                } else if (!node.getColor() && childScore < parentScore) {
+                    //blackScore < parent Node score -> vervangen;
+                    node.getParent().setScore(childScore);
+
+                } else if (node.getColor() && childScore > parentScore) {
+                    // whiteScore > parent Node score -> vervangen;
+                    node.getParent().setScore(childScore);
+                }
+
+                System.out.println("child" + node.getScore());
+                System.out.println("parent" + node.getParent().getScore());
+                grandparentNodes.add(node.getParent());
+                
+            }
             /*
+            for (Node node : parentNodes) {
+                Integer parentScore = node.getScore();
+                Integer grandparentScore = node.getParent().getScore();
+                System.out.println("GPS" + grandparentScore);
+                System.out.println("PS" + parentScore);
+
+
+                if (grandparentScore == null) {
+                    node.getParent().setScore(parentScore);
+
+                } else if (!node.getColor() && parentScore < grandparentScore) {
+                    //blackScore < parent Node score -> vervangen;
+                    node.getParent().setScore(parentScore);
+
+                } else if (node.getColor() && parentScore > grandparentScore) {
+                    // whiteScore > parent Node score -> vervangen;
+                    node.getParent().setScore(parentScore);
+                }
+                grandparentNodes.add(node.getParent());
+                System.out.println("parent" + node.getScore());
+                System.out.println("grandparent" + node.getParent().getScore());
+            }
+*/
+
+            System.out.println(parentNodes.size());
+            System.out.println(grandparentNodes.size());
+
+            Integer bestScore = null;
+            Board bestBoard = null;
+            for (Node node: grandparentNodes) {
+                System.out.println(bestScore);
+
+                if(bestScore == null) {
+                    bestScore = node.getScore();
+                } else if (!node.getColor() && node.getScore() < bestScore) {
+                    System.out.println("test1");
+
+                    bestScore = node.getScore();
+                    bestBoard = node.getLeafBoard();
+                } else if (node.getColor() && node.getScore() > bestScore) {
+                    System.out.println("test2");
+
+                    bestScore = node.getScore();
+                    bestBoard = node.getLeafBoard();
+                }
+            }
+
+            if(bestBoard != null) {
+                bestBoard.printBoard();
+            }
+            System.out.println("yo" + bestScore);
+
+        }
+
+            ArrayList<Board> new_children = board.checkMovesForAll(false, board);
+
             int greatestDifference = 0;
             Board bestBoard = board;
             for (Board current_board : new_children) {
@@ -104,37 +187,9 @@ public class Main {
             delay(1500);
             wipeScreen();
             board.printBoard();
-            */
-            }
-            System.out.println(board.getWinner());
-
-        /*
-        ArrayList<Board> new_children = board.checkMovesForAll(false, board);
-        int greatestDifference = 0;
-        Board bestBoard = board;
-        for (int j = 0; j < new_children.size(); j++) {
-            Board child = new_children.get(j);
-            child.printBoard();
-            int whiteScore = child.calculateScoreForOnePlayer(pieceAmount, true, child);
-            int blackScore = child.calculateScoreForOnePlayer(pieceAmount, false, child);
-            System.out.println("The score for black/up (false) is: " + blackScore);
-            System.out.println("The score for white/down (true) is: " + whiteScore);
-            int scoreDifference = blackScore-whiteScore;
-            System.out.println("The score difference is: " + scoreDifference);
-
-            if(scoreDifference > greatestDifference) {
-                greatestDifference = scoreDifference;
-                bestBoard = child;
-            }
+        System.out.println(board.getWinner());
 
         }
-
-        System.out.println("The greatest difference is: " + greatestDifference);
-        System.out.println("The best move is:");
-        bestBoard.printBoard();
-        */
-        }
-
 
 
 
@@ -271,65 +326,28 @@ public class Main {
     }
 
 
-    private static void calculateBestMoveForCPU(Board input_board, int piece_amount) {
-        // how deep in the search tree does the cpu have to look
-        // i.e. deepness of 1 is only the first possible moves and then the best score
-        // deepness of 3 is all moves of cpu, all moves of human, all moves of cpu and then the best score
-        int layerDeepnessOfMoves = 1;
-
-        if(piece_amount <= 22 && piece_amount > 16) {
-            layerDeepnessOfMoves = 1;
-        } else if(piece_amount <= 16 && piece_amount > 10) {
-            layerDeepnessOfMoves = 3;
-        } else if(piece_amount <= 10 && piece_amount > 5) {
-            layerDeepnessOfMoves = 5;
-        } else if(piece_amount <= 5 && piece_amount > 4) {
-            layerDeepnessOfMoves = 7;
-        } else if(piece_amount <= 4 && piece_amount > 0) {
-            layerDeepnessOfMoves = 9;
-        }
-
-        if(layerDeepnessOfMoves == 1) {
-            ArrayList<Board> new_children = input_board.checkMovesForAll(false, input_board);
-            // en dan score berekenen en het board met de beste score kiezen
-
-
-            for(int z = 0; z < new_children.size(); z++) {
-                //new_children.get(z).printBoard();
-            }
-
-            for(int k = 0; k < new_children.size(); k++) {
-                Board current_board = new_children.get(k);
-
-                System.out.println("test");
-                current_board.printBoard();
-            }
-        }
-
-        if(layerDeepnessOfMoves == 3) {
-            ArrayList<Board> black1_new_children = input_board.checkMovesForAll(false, input_board);
-            System.out.println("test1");
-
-            ArrayList<Board> white_new_children = new ArrayList<>();
-            for(int i = 0; i < black1_new_children.size(); i++) {
-                Board current_board = black1_new_children.get(i);
-                white_new_children.addAll(current_board.checkMovesForAll(true, current_board));
-            }
-
-            System.out.println("test2");
-
-            ArrayList<Board> black2_new_children = new ArrayList<>();
-            for(int j = 0; j < white_new_children.size(); j++) {
-                Board current_board = white_new_children.get(j);
-                black2_new_children.addAll(current_board.checkMovesForAll(true, current_board));
-            }
-
-            System.out.println("test3");
-
-            for(int k = 0; k < black2_new_children.size(); k++) {
-                Board current_board = black2_new_children.get(k);
-                current_board.printBoard();
-            }
-        }
+    public static void welcomeScreen() {
+        wipeScreen();
+        System.out.println("Hello! Welcome to our Simple Chess game.");
+        System.out.println("You play white (bottom), the computer plays black (top).");
+        System.out.println("");
+        delay(4500);
+        wipeScreen();
+        System.out.println("How to move?");
+        System.out.println("Please enter the start and end position of the piece you want to move.");
+        System.out.println("For example, to move a piece (the pawn of course) from c2 to c4, " +
+        "you simply have to type 'c2c4' without the quote marks.");
+        System.out.println("");
+        delay(12000);
+        wipeScreen();
+        System.out.println("Every piece is indicated by their color (B for black and W for white) " +
+        "followed by a number; 1 for pawn, 5 for rook and 9 for king.");
+        System.out.println("");
+        delay(7250);
+        wipeScreen();
+        System.out.println("Have fun and try to beat the cpu!");
+        delay(2500);
+        wipeScreen();
     }
+
 }
