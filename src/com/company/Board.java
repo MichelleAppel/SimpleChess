@@ -57,7 +57,7 @@ public class Board {
 
     // adds all pieces (objects) to board the board (matrix)
     public void addPieces() {
-        //addPawns();
+        addPawns();
         addRooks();
         addKings();
     }
@@ -573,7 +573,7 @@ public class Board {
 
         if(piece != null && piece.getValue() == 9 && piece.getColor() == color) {
             // bonus for having a king
-            score += 42;
+            score += 200;
 
             // surrounding pieces from yourself: bonus; from the opponent: malus
             if (y + 1 < 8 && x + 1 < 8) {

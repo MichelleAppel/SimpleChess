@@ -15,13 +15,15 @@ public class Main {
 
 
     public static void main(String[] args) {
+
+        //welcomeScreen();
+
         board.addPieces();          // adds the pieces to the board
         board.printBoard();       // prints the board
 
         // pieceAmount is used to know whether the game status is begingame, midgame or endgame
         int pieceAmount = AMOUNT_OF_PIECES;
 
-        //welcomeScreen();
 
         //main game play loop
         while (board.gameIsNotFinished()) {
@@ -30,6 +32,8 @@ public class Main {
             wipeScreen();
             board.printBoard();
 
+            if(!board.gameIsNotFinished()) break;
+
             board = computerMove(pieceAmount);
             delay(500);
             wipeScreen();
@@ -37,9 +41,6 @@ public class Main {
 
         }
 
-        delay(1500);
-        wipeScreen();
-        board.printBoard();
         System.out.println(board.getWinner());
 
     }

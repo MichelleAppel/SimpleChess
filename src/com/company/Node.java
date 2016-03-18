@@ -13,20 +13,25 @@ public class Node {
         this.color = color;
     }
 
+    // returns parentnode
     public Node getParent() {
         return parent;
     }
 
+    // returns leafboard
     public Board getLeafBoard() {
         return leafBoard;
     }
 
+    // sets score on a given node
     public void setScore(int score) {
         this.score = score;
     }
 
+    // returns color
     public boolean getColor() { return color;}
 
+    // returns score
     public Integer getScore() { return score; }
 
 }
