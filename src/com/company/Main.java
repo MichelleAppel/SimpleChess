@@ -4,10 +4,11 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
-public class Main {
+class Main {
 
-    private static int BOARD_SIZE = 8;                  // size of a chess board
+    private static final int BOARD_SIZE = 8;                  // size of a chess board
     private static final int AMOUNT_OF_PIECES = 22;     // 8x2 pawns, 2x2 rooks, 1x2 kings
 
     // declare new object from the Board class
@@ -15,9 +16,11 @@ public class Main {
 
     public static void main(String[] args) {
         welcomeScreen();
-        board.addPieces();
-        board.printBoard();
 
+        board.addPieces();          // adds the pieces to the board
+        board.printBoard();         // prints the board
+
+        // pieceAmount is used to know whether the game status is begingame, midgame or endgame
         int pieceAmount = AMOUNT_OF_PIECES;
 
         // main game play loop
@@ -32,11 +35,14 @@ public class Main {
 
             // computer move
             board = computerMove(pieceAmount);
+
             wipeScreen();
             board.printBoard();
+
         }
 
         System.out.println(board.getWinner());
+
     }
 
     /* Generates the move for the computer, based on MiniMax algorithm.
@@ -45,9 +51,9 @@ public class Main {
      * Then it knows which path i.e. move to take.
      * More info in our report!
      */
-    public static Board computerMove(int pieceAmount) {
+    private static Board computerMove(int pieceAmount) {
         ArrayList<Node> nodes = new ArrayList<>();
-        nodes.add(new Node(null, board, null, true));
+        nodes.add(new Node(null, board, true));
 
         nodes = generateNextLayer(nodes, false);
         nodes = generateNextLayer(nodes, true);
@@ -56,8 +62,8 @@ public class Main {
 
         for (Node node : nodes) {
             Board board = node.getLeafBoard();
-            int whiteScore = board.calculateScoreForOnePlayer(pieceAmount, true, board);
-            int blackScore = board.calculateScoreForOnePlayer(pieceAmount, false, board);
+            int whiteScore = board.calculateScoreForOnePlayer(pieceAmount, true);
+            int blackScore = board.calculateScoreForOnePlayer(pieceAmount, false);
             int scoreDifference = whiteScore - blackScore;
             node.setScore(scoreDifference);
         }
@@ -154,16 +160,14 @@ public class Main {
 
         for (Node node: nodes) {
             Board current_board = node.getLeafBoard();
-            List<Board> boards = current_board.checkMovesForAll(color, current_board);
-            for( Board board: boards) {
-                children.add(new Node(node, board, null, color));
-            }
+            List<Board> boards = current_board.generateMovesForAll(color, current_board);
+            children.addAll(boards.stream().map(board -> new Node(node, board, color)).collect(Collectors.toList()));
         }
         return children;
     }
 
     // move based on user input, returns the board (only if valid)
-    public static Board userMove() {
+    private static Board userMove() {
         int[] coordinates = getUserInput();
 
         int startX = coordinates[0];
@@ -242,8 +246,6 @@ public class Main {
             int startYInt = Integer.parseInt(startYString);
             if (startYInt >= 1 && startYInt <= 8) {
                 startY = 8 - (startYInt);
-            } else {
-                // error
             }
 
             // validate end X (is the char in the correct range?)
@@ -270,17 +272,14 @@ public class Main {
             int endYInt = Integer.parseInt(endYString);
             if (endYInt >= 1 && endYInt <= 8) {
                 endY = 8 - (endYInt);
-            } else {
-                // error
             }
 
         }
-        int[] coordinates = {startX, startY, endX, endY};
-        return coordinates;
+        return new int[]{startX, startY, endX, endY};
     }
 
     // information for the user about the game
-    public static void welcomeScreen() {
+    private static void welcomeScreen() {
         wipeScreen();
         System.out.println("Hello! Welcome to our Simple Chess game.");
         System.out.println("You play white (bottom), the computer plays black (top).");

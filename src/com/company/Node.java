@@ -1,15 +1,15 @@
 package com.company;
 
 public class Node {
-    private Node parent;
-    private Board leafBoard;
+    private final Node parent;
+    private final Board leafBoard;
     private Integer score;
-    private boolean color;
+    private final boolean color;
 
-    public Node(Node parent, Board leafBoard, Integer score, boolean color) {
+    public Node(Node parent, Board leafBoard, boolean color) {
         this.parent = parent;
         this.leafBoard = leafBoard;
-        this.score = score;
+        this.score = null;
         this.color = color;
     }
 

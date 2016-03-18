@@ -1,6 +1,7 @@
 package com.company;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
         /* Table of Contents
          * 1. Declaring private instance variables
@@ -12,18 +13,19 @@ import java.util.ArrayList;
          * 7. Methods for visualisation
          */
 
+@SuppressWarnings("SameParameterValue")
 public class Board {
     /* *****************************************
      * 1. Declaring private instance variables *
      ***************************************** */
 
-    private int amount_of_pieces;
-    private int size;
-    private Piece[][] board;
+    private final int amount_of_pieces;
+    private final int size;
+    private final Piece[][] board;
 
-    private static int pawnValue = 1;
-    private static int rookValue = 5;
-    private static int kingValue = 9;
+    private static final int pawnValue = 1;
+    private static final int rookValue = 5;
+    private static final int kingValue = 9;
 
 
     /* **************************
@@ -37,8 +39,10 @@ public class Board {
         this.amount_of_pieces = amount_of_pieces;
     }
 
+
+
     // copy constructor
-    public Board(Board previous) {
+    private Board(Board previous) {
         this.size = previous.size;
         this.amount_of_pieces = previous.amount_of_pieces;
 
@@ -63,7 +67,7 @@ public class Board {
     }
 
     // adds black and white pawns to board
-    public void addPawns() {
+    private void addPawns() {
         for (int i = 0; i < 8; i++) {
             board[i][6] = new Piece(true, pawnValue, i, 6);     // white pawn x8
             board[i][1] = new Piece(false, pawnValue, i, 1);    // black pawn x8
@@ -71,7 +75,7 @@ public class Board {
     }
 
     // adds black and white rooks to board
-    public void addRooks() {
+    private void addRooks() {
         board[0][7] = new Piece(true, rookValue, 0, 7);         // white rook 1
         board[7][7] = new Piece(true, rookValue, 7, 7);         // white rook 2
         board[0][0] = new Piece(false, rookValue, 0, 0);        // black rook 1
@@ -79,7 +83,7 @@ public class Board {
     }
 
     // adds black and white kings to board
-    public void addKings() {
+    private void addKings() {
         board[4][7] = new Piece(true, kingValue, 4, 7);         // white king
         board[4][0] = new Piece(false, kingValue, 4, 0);        // black king
     }
@@ -101,13 +105,13 @@ public class Board {
 
                 // if pawn
                 if (value == pawnValue) {
-                    minilist = checkMovesForPawn(color, y1, x1, input_board);
+                    minilist = generateMovesForPawn(color, y1, x1, input_board);
                     // if rook
                 } else if (value == rookValue) {
-                    minilist = checkMovesForRook(color, y1, x1, input_board);
+                    minilist = generateMovesForRook(color, y1, x1, input_board);
                     // if king
                 } else if (value == kingValue) {
-                    minilist = checkMovesForKing(color, y1, x1, input_board);
+                    minilist = generateMovesForKing(color, y1, x1, input_board);
                 }
 
                 Board board1 = pieceMoves(color, y1, x1, y2, x2, value, input_board);
@@ -126,11 +130,11 @@ public class Board {
     }
 
 
-    public void addPiece(Piece piece, int x, int y) {
+    private void addPiece(Piece piece, int x, int y) {
         board[x][y] = piece;
     }
 
-    public void removePiece(int x, int y) {
+    private void removePiece(int x, int y) {
         board[x][y] = null;
     }
 
@@ -146,59 +150,59 @@ public class Board {
         return board1;
     }
 
-    public ArrayList checkMovesForPawn(boolean color, int x, int y, Board input_board) {
+    private ArrayList generateMovesForPawn(boolean color, int x, int y, Board input_board) {
         ArrayList<Board> list = new ArrayList<>();
 
         if (color) {
             // for white
 
             if (x - 1 >= 0 && board[y][x - 1] == null) {
-                list.add(pieceMoves(color, x, y, x - 1, y, pawnValue, input_board));
+                list.add(pieceMoves(true, x, y, x - 1, y, pawnValue, input_board));
             }
 
             if (x == 6 && board[y][x - 1] == null && board[y][x - 2] == null) {
-                list.add(pieceMoves(color, x, y, x - 2, y, pawnValue, input_board));
+                list.add(pieceMoves(true, x, y, x - 2, y, pawnValue, input_board));
             }
 
             if (x - 1 >= 0 && y - 1 >= 0 && board[y - 1][x - 1] != null && !board[y - 1][x - 1].getColor()) {
-                list.add(pieceMoves(color, x, y, x - 1, y - 1, pawnValue, input_board));
+                list.add(pieceMoves(true, x, y, x - 1, y - 1, pawnValue, input_board));
             }
 
             if (x - 1 >= 0 && y + 1 < 8 && board[y + 1][x - 1] != null && !board[y + 1][x - 1].getColor()) {
-                list.add(pieceMoves(color, x, y, x - 1, y + 1, pawnValue, input_board));
+                list.add(pieceMoves(true, x, y, x - 1, y + 1, pawnValue, input_board));
             }
 
         } else {
             //for black
 
             if (x + 1 < 8 && board[y][x + 1] == null) {
-                list.add(pieceMoves(color, x, y, x + 1, y, pawnValue, input_board));
+                list.add(pieceMoves(false, x, y, x + 1, y, pawnValue, input_board));
             }
 
             if (x == 1 && board[y][x + 1] == null && board[y][x + 2] == null) {
-                list.add(pieceMoves(color, x, y, x + 2, y, pawnValue, input_board));
+                list.add(pieceMoves(false, x, y, x + 2, y, pawnValue, input_board));
             }
 
             if (x + 1 < 8 && y - 1 >= 0 && board[y - 1][x + 1] != null
                     && board[y - 1][x + 1].getColor()) {
-                list.add(pieceMoves(color, x, y, x + 1, y - 1, pawnValue, input_board));
+                list.add(pieceMoves(false, x, y, x + 1, y - 1, pawnValue, input_board));
             }
 
             if (x + 1 < 8 && y + 1 < 8 && board[y + 1][x + 1] != null
                     && board[y + 1][x + 1].getColor()) {
-                list.add(pieceMoves(color, x, y, x + 1, y + 1, pawnValue, input_board));
+                list.add(pieceMoves(false, x, y, x + 1, y + 1, pawnValue, input_board));
             }
         }
         return list;
     }
 
-    public ArrayList checkMovesForRook(boolean color, int x, int y, Board input_board) {
+    private ArrayList generateMovesForRook(boolean color, int x, int y, Board input_board) {
         ArrayList<Board> list = new ArrayList<>();
 
         int x1 = x+1;
         int y1 = y+1;
 
-        // move naar rechts
+        // move right
         while (x1 < 8 && board[y][x1] == null) {
             list.add(pieceMoves(color, x, y, x1, y, rookValue, input_board));
             x1++;
@@ -207,7 +211,7 @@ public class Board {
             list.add(pieceMoves(color, x, y, x1, y, rookValue, input_board));
         }
 
-        // move naar beneden
+        // move down
         while (y1 < 8 && board[y1][x] == null) {
             list.add(pieceMoves(color, x, y, x, y1, rookValue, input_board));
             y1++;
@@ -219,7 +223,7 @@ public class Board {
         x1 = x-1;
         y1 = y-1;
 
-        // move naar links
+        // move left
         while (x1 >= 0 && board[y][x1] == null) {
             list.add(pieceMoves(color, x, y, x1, y, rookValue, input_board));
             x1--;
@@ -228,7 +232,7 @@ public class Board {
             list.add(pieceMoves(color, x, y, x1, y, rookValue, input_board));
         }
 
-        // move naar boven
+        // move up
         while (y1 >= 0 && board[y1][x] == null) {
             list.add(pieceMoves(color, x, y, x, y1, rookValue, input_board));
             y1--;
@@ -240,104 +244,89 @@ public class Board {
         return list;
     }
 
-    public ArrayList checkMovesForKing(boolean color, int x, int y, Board input_board) {
+
+    private ArrayList generateMovesForKing(boolean color, int x, int y, Board input_board) {
         ArrayList<Board> list = new ArrayList<>();
 
         int x1;
         int y1;
 
-        if (x+1 < 8) {
-            x1 = x+1;
-            y1 = y;
+            if (x + 1 < 8) {
+                x1 = x + 1;
+                y1 = y;
 
-            if (board[y1][x1] == null || board[y1][x1].getColor() != color) {
-                list.add(pieceMoves(color, x, y, x1, y1, kingValue, input_board));
-            } else if (board[y1][x1] != null && board[y1][x1].getColor() != color) {
-                list.add(pieceMoves(color, x, y, x1, y1, kingValue, input_board));
+                if (board[y1][x1] == null || board[y1][x1].getColor() != color) {
+                    list.add(pieceMoves(color, x, y, x1, y1, kingValue, input_board));
+                }
             }
-        }
-        if (x-1 >= 0 ) {
-            x1 = x-1;
-            y1 = y;
+            if (x - 1 >= 0) {
+                x1 = x - 1;
+                y1 = y;
 
-            if (board[y1][x1] == null || board[y1][x1].getColor() != color) {
-                list.add(pieceMoves(color, x, y, x1, y1, kingValue, input_board));
-            } else if (board[y1][x1] != null && board[y1][x1].getColor() != color) {
-                list.add(pieceMoves(color, x, y, x1, y1, kingValue, input_board));
+                if (board[y1][x1] == null || board[y1][x1].getColor() != color) {
+                    list.add(pieceMoves(color, x, y, x1, y1, kingValue, input_board));
+                }
             }
-        }
-        if (y+1 < 8) {
-            x1 = x;
-            y1 = y+1;
+            if (y + 1 < 8) {
+                x1 = x;
+                y1 = y + 1;
 
-            if (board[y1][x1] == null || board[y1][x1].getColor() != color) {
-                list.add(pieceMoves(color, x, y, x1, y1, kingValue, input_board));
-            } else if (board[y1][x1] != null && board[y1][x1].getColor() != color) {
-                list.add(pieceMoves(color, x, y, x1, y1, kingValue, input_board));
+                if (board[y1][x1] == null || board[y1][x1].getColor() != color) {
+                    list.add(pieceMoves(color, x, y, x1, y1, kingValue, input_board));
+                }
             }
-        }
-        if (y-1 >= 0) {
-            x1 = x;
-            y1 = y-1;
+            if (y - 1 >= 0) {
+                x1 = x;
+                y1 = y - 1;
 
-            if (board[y1][x1] == null || board[y1][x1].getColor() != color) {
-                list.add(pieceMoves(color, x, y, x1, y1, kingValue, input_board));
-            } else if (board[y1][x1] != null && board[y1][x1].getColor() != color) {
-                list.add(pieceMoves(color, x, y, x1, y1, kingValue, input_board));
+                if (board[y1][x1] == null || board[y1][x1].getColor() != color) {
+                    list.add(pieceMoves(color, x, y, x1, y1, kingValue, input_board));
+                }
             }
-        }
-        if (y+1 < 8 && x+1 < 8) {
-            x1 = x+1;
-            y1 = y+1;
+            if (y + 1 < 8 && x + 1 < 8) {
+                x1 = x + 1;
+                y1 = y + 1;
 
-            if (board[y1][x1] == null || board[y1][x1].getColor() != color) {
-                list.add(pieceMoves(color, x, y, x1, y1, kingValue, input_board));
-            } else if (board[y1][x1] != null && board[y1][x1].getColor() != color) {
-                list.add(pieceMoves(color, x, y, x1, y1, kingValue, input_board));
+                if (board[y1][x1] == null || board[y1][x1].getColor() != color) {
+                    list.add(pieceMoves(color, x, y, x1, y1, kingValue, input_board));
+                }
             }
-        }
-        if (y-1 >= 0 && x+1 < 8) {
-            x1 = x+1;
-            y1 = y-1;
+            if (y - 1 >= 0 && x + 1 < 8) {
+                x1 = x + 1;
+                y1 = y - 1;
 
-            if (board[y1][x1] == null || board[y1][x1].getColor() != color) {
-                list.add(pieceMoves(color, x, y, x1, y1, kingValue, input_board));
-            } else if (board[y1][x1] != null && board[y1][x1].getColor() != color) {
-                list.add(pieceMoves(color, x, y, x1, y1, kingValue, input_board));
+                if (board[y1][x1] == null || board[y1][x1].getColor() != color) {
+                    list.add(pieceMoves(color, x, y, x1, y1, kingValue, input_board));
+                }
             }
-        }
-        if (y+1 < 8 && x-1 >= 0) {
-            x1 = x-1;
-            y1 = y+1;
+            if (y + 1 < 8 && x - 1 >= 0) {
+                x1 = x - 1;
+                y1 = y + 1;
 
-            if (board[y1][x1] == null || board[y1][x1].getColor() != color) {
-                list.add(pieceMoves(color, x, y, x1, y1, kingValue, input_board));
-            } else if (board[y1][x1] != null && board[y1][x1].getColor() != color) {
-                list.add(pieceMoves(color, x, y, x1, y1, kingValue, input_board));
+                if (board[y1][x1] == null || board[y1][x1].getColor() != color) {
+                    list.add(pieceMoves(color, x, y, x1, y1, kingValue, input_board));
+                }
             }
-        }
-        if (y-1 >= 0 && x-1 >= 0 && board[y-1][x-1] == null) {
-            x1 = x-1;
-            y1 = y-1;
+            if (y - 1 >= 0 && x - 1 >= 0) {
+                x1 = x - 1;
+                y1 = y - 1;
 
-            if (board[y1][x1] == null || board[y1][x1].getColor() != color) {
-                list.add(pieceMoves(color, x, y, x1, y1, kingValue, input_board));
-            } else if (board[y1][x1] != null && board[y1][x1].getColor() != color) {
-                list.add(pieceMoves(color, x, y, x1, y1, kingValue, input_board));
+                if (board[y1][x1] == null || board[y1][x1].getColor() != color) {
+                    list.add(pieceMoves(color, x, y, x1, y1, kingValue, input_board));
+                }
             }
+
+            return list;
         }
 
-        return list;
-    }
-
-    public ArrayList checkMovesForAll(boolean color, Board input_board) {
-        ArrayList<Board> list =  new ArrayList<Board>();
+    public ArrayList generateMovesForAll(boolean color, Board input_board) {
+        ArrayList<Board> list =  new ArrayList<>();
         for(int y = 0; y < 8; y++) {
             for(int x = 0; x < 8; x++) {
 
                 Piece piece = board[y][x];
                 if(piece != null) {
-                    ArrayList<Board> minilist =  new ArrayList<Board>();
+                    ArrayList<Board> minilist =  new ArrayList<>();
 
                     int getValue = piece.getValue();
                     boolean getColor = piece.getColor();
@@ -345,18 +334,16 @@ public class Board {
                     if (color == getColor) {
                         if (getValue == pawnValue) {
                             // pawns
-                            minilist = checkMovesForPawn(color, x, y, input_board);
+                            minilist = generateMovesForPawn(color, x, y, input_board);
                         } else if (getValue == rookValue) {
                             // rooks
-                            minilist = checkMovesForRook(color, x, y, input_board);
+                            minilist = generateMovesForRook(color, x, y, input_board);
                         } else if (getValue == kingValue) {
                             // king
-                            minilist = checkMovesForKing(color, x, y, input_board);
+                            minilist = generateMovesForKing(color, x, y, input_board);
                         }
                     }
-                    for (Board aMinilist : minilist) {
-                        list.add(aMinilist);
-                    }
+                    list.addAll(minilist.stream().collect(Collectors.toList()));
                 }
             }
         }
@@ -375,15 +362,12 @@ public class Board {
         return 0;
     }
 
-    public boolean getColor(int x, int y){
+    public boolean getColor(int x, int y) {
         Piece piece = board[y][x];
-        if(piece != null) {
-            return piece.getColor();
-        }
-        return false;
+        return piece != null && piece.getColor();
     }
 
-    public int calculateScoreForOnePlayer(int pieceAmount, boolean color, Board input_board) {
+    public int calculateScoreForOnePlayer(int pieceAmount, boolean color) {
         int score = 0;
         int pawns_factor_weight;
         int rooks_factor_weight;
@@ -415,22 +399,22 @@ public class Board {
         for(int y = 0; y < 8; y++) {
             for (int x = 0; x < 8; x++) {
                 // calculate pawn score based on amount of pawns and strength of their positions
-                pawns_score = calulatePawnScores(pawns_factor_weight, color, input_board, y, x);
+                pawns_score = calulatePawnScores(pawns_factor_weight, color, y, x);
                 score += pawns_score;
 
                 // calculate rook score based on amount of rooks and strength of their positions
-                rooks_score = calculateRookScores(rooks_factor_weight, color, input_board, y, x);
+                rooks_score = calculateRookScores(rooks_factor_weight, color, y, x);
                 score += rooks_score;
 
                 // calculate king score based on strength of it's position
-                kings_score = calculateKingScores(kings_factor_weight, color, input_board, y, x);
+                kings_score = calculateKingScores(kings_factor_weight, color, y, x);
                 score += kings_score;
             }
         }
         return score;
     }
 
-    public int calulatePawnScores(int pawn_factor_weight, boolean color, Board input_board, int y, int x) {
+    private int calulatePawnScores(int pawn_factor_weight, boolean color, int y, int x) {
         int score = 0;
 
         if (board[y][x] != null && board[y][x].getValue() == pawnValue
@@ -467,7 +451,7 @@ public class Board {
         return score;
     }
 
-    public int adjacentOrDiagonalPawnsBonus(boolean color, int pawn_factor_weight, int y, int x) {
+    private int adjacentOrDiagonalPawnsBonus(boolean color, int pawn_factor_weight, int y, int x) {
         int score = 0;
         if (board[y][x] != null && board[y][x].getValue() == pawnValue
                 && board[y][x].getColor() == color) {
@@ -476,7 +460,7 @@ public class Board {
         return score;
     }
 
-    public int calculateRookScores(int rook_factor_weight, boolean color, Board input_board, int y, int x) {
+    private int calculateRookScores(int rook_factor_weight, boolean color, int y, int x) {
         // 2 of your own rooks on one line gives you a bonus
         // the opponent's king in the move-line of your rook gives you a bonus
         // the (amount of) rooks itself give you a bonus
@@ -567,13 +551,13 @@ public class Board {
     }
 
 
-    public int calculateKingScores(int king_factor_weight, boolean color, Board input_board, int y, int x) {
+    private int calculateKingScores(int king_factor_weight, boolean color, int y, int x) {
         int score = 0;
         Piece piece = board[y][x];
 
         if(piece != null && piece.getValue() == 9 && piece.getColor() == color) {
             // bonus for having a king
-            score += 200;
+            score += 2000;
 
             // surrounding pieces from yourself: bonus; from the opponent: malus
             if (y + 1 < 8 && x + 1 < 8) {
@@ -611,7 +595,7 @@ public class Board {
         return score;
     }
 
-    public int kingSurroundingsBonus(boolean color, int king_factor_weight, int y, int x) {
+    private int kingSurroundingsBonus(boolean color, int king_factor_weight, int y, int x) {
         int score = 0;
         Piece somePiece = board[y][x];
         if (somePiece != null) {
@@ -645,11 +629,8 @@ public class Board {
             }
         }
 
-        if(whiteKingIsAlive && blackKingIsAlive) {
-            return true;
-        }
+        return whiteKingIsAlive && blackKingIsAlive;
 
-        return false;
     }
 
     public String getWinner() {
