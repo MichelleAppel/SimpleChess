@@ -281,25 +281,25 @@ class Main {
     // information for the user about the game
     private static void welcomeScreen() {
         wipeScreen();
+        System.out.println("The game starts in 35 seconds, please read the instructions below:");
+        System.out.println("");
+
         System.out.println("Hello! Welcome to our Simple Chess game.");
         System.out.println("You play white (bottom), the computer plays black (top).");
         System.out.println("");
-        delay(4500);
-        wipeScreen();
+
         System.out.println("How to move?");
         System.out.println("Please enter the start and end position of the piece you want to move.");
         System.out.println("For example, to move a piece (the pawn of course) from c2 to c4, " +
         "you simply have to type 'c2c4' without the quote marks.");
         System.out.println("");
-        delay(12000);
-        wipeScreen();
+
         System.out.println("Every piece is indicated by their color (B for black and W for white) " +
         "followed by a number; 1 for pawn, 5 for rook and 9 for king.");
         System.out.println("");
-        delay(7250);
-        wipeScreen();
+
         System.out.println("Have fun and try to beat the cpu!");
-        delay(2500);
+        delay(35000);
         wipeScreen();
     }
 }
