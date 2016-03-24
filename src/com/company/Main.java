@@ -280,10 +280,6 @@ class Main {
 
     // information for the user about the game
     private static void welcomeScreen() {
-        wipeScreen();
-        System.out.println("The game starts in 35 seconds, please read the instructions below:");
-        System.out.println("");
-
         System.out.println("Hello! Welcome to our Simple Chess game.");
         System.out.println("You play white (bottom), the computer plays black (top).");
         System.out.println("");
@@ -299,7 +295,6 @@ class Main {
         System.out.println("");
 
         System.out.println("Have fun and try to beat the cpu!");
-        delay(35000);
-        wipeScreen();
+        System.out.println("");
     }
 }
